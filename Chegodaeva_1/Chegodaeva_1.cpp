@@ -23,6 +23,17 @@ struct tube
 
 };
 
+void InputTube()
+{
+    tube NewTube;
+    cout << "Введите длину трубы:";
+    cin >> NewTube.length;
+    cout << "Введите диаметр трубы:";
+    cin >> NewTube.diameter;
+    cout << "Введите статус трубы: 1 - рабочее; 0 - в ремонте:";
+    cin >> NewTube.status;
+}
+
 struct cs
 {
     string name;
