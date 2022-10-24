@@ -26,12 +26,18 @@ struct tube
 void InputTube()
 {
     tube NewTube;
-    cout << "Введите длину трубы:";
-    cin >> NewTube.length;
-    cout << "Введите диаметр трубы:";
-    cin >> NewTube.diameter;
-    cout << "Введите статус трубы: 1 - рабочее; 0 - в ремонте:";
-    cin >> NewTube.status;
+    do{
+        cout << "Введите длину трубы:";
+        cin >> NewTube.length;
+    }while (NewTube.length <= 0);
+    do{
+        cout << "Введите диаметр трубы:";
+        cin >> NewTube.diameter;
+    }while (NewTube.diameter <= 0);
+    do{
+        cout << "Введите статус трубы: 1 - рабочее; 0 - в ремонте:";
+        cin >> NewTube.status;
+    }while (NewTube.status < 0 || NewTube.status > 1);
 }
 
 void PrintTube(const tube& NewTube)
@@ -86,25 +92,32 @@ void EditCS(cs& NewCS)
 void SaveAll(const tube& NewTube, const cs& NewCS)
 {
     ofstream fout;
-    fout.open("data.txt", 'w');
-    fout << NewTube.length << endl << NewTube.diameter << endl << NewTube.status << endl;
-    fout << NewCS.name << endl << NewCS.workshops << endl << NewCS.working_workshops << endl << NewCS.efficiency << endl;
-    fout.close();
+    fout.open("data.txt", ios::out);
+    if (fout.is_open())
+    {
+        fout << NewTube.length << endl << NewTube.diameter << endl << NewTube.status << endl;
+        fout << NewCS.name << endl << NewCS.workshops << endl << NewCS.working_workshops << endl << NewCS.efficiency << endl;
+        fout.close();
+    }
 }
 
 void LoadAll()
 {
     ifstream fin;
-    fin.open("data.txt", 'r');
-    tube NewTube;
-    fin >> NewTube.length;
-    fin >> NewTube.diameter;
-    fin >> NewTube.status;
-    cs NewCS;
-    fin >> NewCS.name;
-    fin >> NewCS.workshops;
-    fin >> NewCS.working_workshops;
-    fin >> NewCS.efficiency;
+    fin.open("data.txt", ios::in);
+    if (fin.is_open())
+    {
+        tube NewTube;
+        fin >> NewTube.length;
+        fin >> NewTube.diameter;
+        fin >> NewTube.status;
+        cs NewCS;
+        fin >> NewCS.name;
+        fin >> NewCS.workshops;
+        fin >> NewCS.working_workshops;
+        fin >> NewCS.efficiency;
+        fin.close();
+    }
 }
 
 int main()
