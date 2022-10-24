@@ -87,15 +87,26 @@ void SaveAll(const tube& NewTube, const cs& NewCS)
 {
     ofstream fout;
     fout.open("data.txt", 'w');
-    fout << "Длина трубы:" << NewTube.length
-        << "\tДиаметр трубы:" << NewTube.diameter
-        << "\tСтатус трубы:" << NewTube.status << endl;
-    fout << "Название компрессорной станции:" << NewCS.name
-        << "\tКоличество всех цехов компрессорной станции" << NewCS.workshops
-        << "\tКоличество работающих цехов компрессорной станции:" << NewCS.working_workshops
-        << "\tЭффективность компрессорной станции:" << NewCS.efficiency << endl;
+    fout << NewTube.length << endl << NewTube.diameter << endl << NewTube.status << endl;
+    fout << NewCS.name << endl << NewCS.workshops << endl << NewCS.working_workshops << endl << NewCS.efficiency << endl;
     fout.close();
 }
+
+void DownloadAll()
+{
+    ifstream fin;
+    fin.open("data.txt", 'r');
+    tube NewTube;
+    fin >> NewTube.length;
+    fin >> NewTube.diameter;
+    fin >> NewTube.status;
+    cs NewCS;
+    fin >> NewCS.name;
+    fin >> NewCS.workshops;
+    fin >> NewCS.working_workshops;
+    fin >> NewCS.efficiency;
+}
+
 int main()
 {
     setlocale(LC_ALL, "rus");       //Поддержка русского языка
@@ -121,7 +132,7 @@ int main()
             SaveAll();
             break;
         case 7:
-            load();
+            DownloadAll();
             break;
 
 }
