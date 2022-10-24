@@ -1,4 +1,5 @@
 ﻿#include <iostream>
+#include <fstream>
 
 using namespace std;
 
@@ -39,6 +40,7 @@ void PrintTube(const tube& NewTube)
         << "\tДиаметр трубы:" << NewTube.diameter
         << "\tСтатус трубы:" << NewTube.status <<endl;
 }
+
 
 void EditTube(tube& NewTube)
 {
@@ -81,6 +83,19 @@ void EditCS(cs& NewCS)
     cin >> NewCS.working_workshops;
 }
 
+void SaveAll(const tube& NewTube, const cs& NewCS)
+{
+    ofstream fout;
+    fout.open("data.txt", 'w');
+    fout << "Длина трубы:" << NewTube.length
+        << "\tДиаметр трубы:" << NewTube.diameter
+        << "\tСтатус трубы:" << NewTube.status << endl;
+    fout << "Название компрессорной станции:" << NewCS.name
+        << "\tКоличество всех цехов компрессорной станции" << NewCS.workshops
+        << "\tКоличество работающих цехов компрессорной станции:" << NewCS.working_workshops
+        << "\tЭффективность компрессорной станции:" << NewCS.efficiency << endl;
+    fout.close();
+}
 int main()
 {
     setlocale(LC_ALL, "rus");       //Поддержка русского языка
@@ -103,7 +118,7 @@ int main()
             edit_ks();
             break;
         case 6:
-            save();
+            SaveAll();
             break;
         case 7:
             load();
