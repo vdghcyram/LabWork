@@ -20,7 +20,6 @@ struct tube
     double length;
     double diameter;
     bool status;
-
 };
 
 void InputTube()
@@ -41,6 +40,20 @@ struct cs
     int working_workshops;
     double efficiency;
 };
+
+void InputCS()
+{
+    cs NewCS;
+    cout << "Введите название компрессорной станции:";
+    cin >> NewCS.name;
+    cout << "Введите количество всех цехов компрессорной станции:";
+    cin >> NewCS.workshops;
+    cout << "Введите количество работающих цехов компрессорной станции:";
+    cin >> NewCS.working_workshops;
+    cout << "Введите эффективность компрессорной станции:";
+    cin >> NewCS.efficiency;
+}
+
 int main()
 {
     setlocale(LC_ALL, "rus");       //Поддержка русского языка
