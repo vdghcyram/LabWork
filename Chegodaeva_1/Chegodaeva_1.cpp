@@ -4,7 +4,6 @@ using namespace std;
 
 void consol()
 {
-    int choice = 0;
     cout << "Меню:" << endl
         << "1. Добавить трубу" << endl
         << "2. Добавить КС" << endl
@@ -14,20 +13,23 @@ void consol()
         << "6. Сохранить" << endl
         << "7. Загрузить" << endl
         << "0. Выход" << endl;
-    cin >> choice;
 }
 
-void tube()
+struct tube
 {
-    double dlina;
-    cout << "Введите длину трубы:" << endl;
-    cin >> dlina;
-    do {
-        cout << "Введите корректное значение:";
-    } while (dlina < 0 || dlina == не буква)
+    double length;
+    double diameter;
+    bool status;
 
-}
+};
 
+struct cs
+{
+    string name;
+    int workshops;
+    int working_workshops;
+    double efficiency;
+};
 int main()
 {
     setlocale(LC_ALL, "rus");       //Поддержка русского языка
