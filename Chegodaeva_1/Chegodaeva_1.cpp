@@ -33,6 +33,15 @@ void InputTube()
     cin >> NewTube.status;
 }
 
+void PrintTube(const tube& NewTube)
+{
+    cout << "Длина трубы:" << NewTube.length
+        << "\tДиаметр трубы:" << NewTube.diameter
+        << "\tСтатус трубы:" << NewTube.status <<endl;
+}
+
+
+
 struct cs
 {
     string name;
@@ -54,21 +63,28 @@ void InputCS()
     cin >> NewCS.efficiency;
 }
 
+void PrintCS(const cs& NewCS)
+{
+    cout << "Название компрессорной станции:" << NewCS.name
+        << "\tКоличество всех цехов компрессорной станции" << NewCS.workshops
+        << "\tКоличество работающих цехов компрессорной станции:" << NewCS.working_workshops
+        << "\tЭффективность компрессорной станции:" << NewCS.efficiency << endl;
+}
+
 int main()
 {
     setlocale(LC_ALL, "rus");       //Поддержка русского языка
     consol();
-    return 0;
-
-    switch ()
+    int x;
+    switch (cin >> x)
         case 1:
-            tube();
+            InputTube();
             break;
         case 2:
-            ks();
+            InputCS();
             break;
         case 3:
-            all();
+            PrintTube();
             break;
         case 4:
             edit_tube();
