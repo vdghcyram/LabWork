@@ -40,7 +40,11 @@ void PrintTube(const tube& NewTube)
         << "\tСтатус трубы:" << NewTube.status <<endl;
 }
 
-
+void EditTube(tube& NewTube)
+{
+    cout << "Введите обновлённый статус трубы:";
+    cin >> NewTube.status;
+}
 
 struct cs
 {
@@ -69,6 +73,12 @@ void PrintCS(const cs& NewCS)
         << "\tКоличество всех цехов компрессорной станции" << NewCS.workshops
         << "\tКоличество работающих цехов компрессорной станции:" << NewCS.working_workshops
         << "\tЭффективность компрессорной станции:" << NewCS.efficiency << endl;
+}
+
+void EditCS(cs& NewCS)
+{
+    cout << "Введите обновлённое количество работающих цехов компрессорной станции:";
+    cin >> NewCS.working_workshops;
 }
 
 int main()
