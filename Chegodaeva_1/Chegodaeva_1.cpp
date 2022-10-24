@@ -92,7 +92,7 @@ void SaveAll(const tube& NewTube, const cs& NewCS)
     fout.close();
 }
 
-void DownloadAll()
+void LoadAll()
 {
     ifstream fin;
     fin.open("data.txt", 'r');
@@ -132,7 +132,7 @@ int main()
             SaveAll();
             break;
         case 7:
-            DownloadAll();
+            LoadAll();
             break;
 
 }
