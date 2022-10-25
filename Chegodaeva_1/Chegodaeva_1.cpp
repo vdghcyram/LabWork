@@ -119,18 +119,55 @@ void EditCS(cs& NewCS)
     } while (!CheckingValues(NewCS.working_workshops, 0, NewCS.workshops));
 }
 
+bool NonExistentValues(const tube& NewTube,const cs& NewCS)
+{
+    if ((NewCS.workshops == 0) || (NewTube.length == 0))
+    {
+        cout << "Введены некорректные данные, сначала добавьте характеристики трубы и компрессорной станции" << endl;
+        return false;
+    }
+    return true;
+}
+
 void SaveAll(const tube& NewTube, const cs& NewCS)
 {
     ofstream fout;
     fout.open("data.txt", ios::out);
-    NonExistentValues(NewTube, NewCS);
+    if (!NonExistentValues(NewTube, NewCS)) 
+        return;
     if (fout.is_open())
     {
-        fout << NewTube.length << endl << NewTube.diameter << endl << NewTube.status << endl;
-        fout << NewCS.name << endl << NewCS.workshops << endl << NewCS.working_workshops << endl << NewCS.efficiency << endl;
+        cout << "1. Сохранить информацию по трубе" << endl
+            << "2. Сохранить информацию по компрессорной станции" << endl
+            << "3. Сохранить информацию по всем объектам" << endl;
+        int i = 0;
+        do {
+            cin >> i;
+        } while (!CheckingValues(i, 1, 3));
+
+        switch (i)
+        {
+        case 1:
+        {
+            fout << NewTube.length << endl << NewTube.diameter << endl << NewTube.status << endl;
+            return;
+        }
+        case 2:
+        {
+            
+            fout << NewCS.name << endl << NewCS.workshops << endl << NewCS.working_workshops << endl << NewCS.efficiency << endl;
+            return;
+        }
+        case 3:
+        {
+            
+            fout << NewTube.length << endl << NewTube.diameter << endl << NewTube.status << endl;
+            fout << NewCS.name << endl << NewCS.workshops << endl << NewCS.working_workshops << endl << NewCS.efficiency << endl;
+            return;
+        }
+        }
         fout.close();
     }
-
 }
 
 void LoadAll()
@@ -149,15 +186,6 @@ void LoadAll()
         fin >> NewCS.working_workshops;
         fin >> NewCS.efficiency;
         fin.close();
-    }
-}
-
-void NonExistentValues(tube& NewTube, cs& NewCS)
-{
-    if ((NewCS.workshops == 0) || (NewTube.length == 0))
-    {
-        cout << "Введены некорректные данные, сначала добавьте характеристики трубы и компрессорной станции" << endl;
-        return;
     }
 }
 
