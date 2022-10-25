@@ -159,29 +159,52 @@ void LoadAll()
 int main()
 {
     setlocale(LC_ALL, "rus");       //Поддержка русского языка
-    consol();
-    int x;
-    switch (cin >> x)
-        case 1:
-            InputTube();
-            break;
-        case 2:
-            InputCS();
-            break;
-        case 3:
-            PrintTube();
-            break;
-        case 4:
-            edit_tube();
-            break;
-        case 5:
-            edit_ks();
-            break;
-        case 6:
-            SaveAll();
-            break;
-        case 7:
-            LoadAll();
-            break;
+    while (1)
+    {
+        consol();
+        int i = 0;
+        cin >> i;
+        switch (i)
+        {
+            case 1:
+            {
+                InputTube();
+                break;
+            }
+            case 2:
+            {
+                InputCS();
+                break;
+            }
+            case 3:
+            {
+                break;
+            }
+            case 4:
+            {
+                EditTube(tube & NewTube);
+                break;
+            }
+            case 5:
+            {
+                EditCS(cs & NewCS);
+                break;
+            }
+            case 6:
+            {
+                SaveAll(const tube & NewTube, const cs & NewCS);
+                break;
+            }
+            case 7:
+            {
+                LoadAll();
+                break;
+            }
+            case 0:
+            {
+                return 0;
+            }
+        }
 
+    }
 }
