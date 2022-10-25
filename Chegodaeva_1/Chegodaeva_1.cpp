@@ -35,20 +35,19 @@ struct tube
     bool status;
 };
 
-void InputTube()
+void InputTube(tube& NewTube)
 {
-    tube NewTube;
     do{
-        cout << "Введите длину трубы:" << endl;
+        cout << "Введите длину трубы: " << endl;
         cin >> NewTube.length;
     }while (!CheckingValues(NewTube.length, 0.0001));
     do{
-        cout << "Введите диаметр трубы:" << endl;
+        cout << "Введите диаметр трубы: " << endl;
         cin >> NewTube.diameter;
     }while (!CheckingValues(NewTube.diameter,0.0001));
     char check = '0';
     do{
-        cout << "Введите статус трубы: 1 - рабочее; 0 - в ремонте:" << endl;
+        cout << "Введите статус трубы: 1 - рабочее; 0 - в ремонте: " << endl;
         cin >> check;
     }while (!CheckingValues(check,'0','1'));
     if (check == '1')
@@ -59,9 +58,9 @@ void InputTube()
 
 void PrintTube(const tube& NewTube)
 {
-    cout << "Длина трубы:" << NewTube.length
-        << "\tДиаметр трубы:" << NewTube.diameter
-        << "\tСтатус трубы:" << NewTube.status <<endl;
+    cout << "Длина трубы: " << NewTube.length << endl
+        << "Диаметр трубы: " << NewTube.diameter << endl
+        << "Статус трубы: " << NewTube.status <<endl;
 }
 
 void EditTube(tube& NewTube)
@@ -69,7 +68,7 @@ void EditTube(tube& NewTube)
     do {
         cin.clear();
         cin.ignore(10000, '\n');
-        cout << "Введите обновлённый статус трубы:" << endl;
+        cout << "Введите обновлённый статус трубы: " << endl;
         cin >> NewTube.status;
     } while (!CheckingValues(NewTube.status));
 }
@@ -82,9 +81,8 @@ struct cs
     int efficiency;
 };
 
-void InputCS()
+void InputCS(cs& NewCS)
 {
-    cs NewCS;
     cout << "Введите название компрессорной станции:" << endl;
     cin >> NewCS.name;
     do {
@@ -104,10 +102,10 @@ void InputCS()
 
 void PrintCS(const cs& NewCS)
 {
-    cout << "Название компрессорной станции:" << NewCS.name
-        << "\tКоличество всех цехов компрессорной станции" << NewCS.workshops
-        << "\tКоличество работающих цехов компрессорной станции:" << NewCS.working_workshops
-        << "\tЭффективность компрессорной станции:" << NewCS.efficiency << endl;
+    cout << "Название компрессорной станции: " << NewCS.name <<endl
+        << "Количество всех цехов компрессорной станции: " << NewCS.workshops << endl
+        << "Количество работающих цехов компрессорной станции: " << NewCS.working_workshops << endl
+        << "Эффективность компрессорной станции: " << NewCS.efficiency << endl;
 }
 
 void EditCS(cs& NewCS)
@@ -115,7 +113,7 @@ void EditCS(cs& NewCS)
     do {
         cin.clear();
         cin.ignore(10000, '\n');
-        cout << "Введите обновлённое количество работающих цехов компрессорной станции:" << endl;
+        cout << "Введите обновлённое количество работающих цехов компрессорной станции: " << endl;
         cin >> NewCS.working_workshops;
     } while (!CheckingValues(NewCS.working_workshops) || NewCS.working_workshops >= NewCS.workshops);
 }
@@ -151,12 +149,58 @@ void LoadAll()
     }
 }
 
+void OutPut(tube& NewTube, cs& NewCS)
+{
+    cout << "1. Вывести информацию по трубе" << endl
+        << "2. Вывести информацию по компрессорной станции" << endl
+        << "3. Вывести информацию по всем объектам" << endl;
+    int i = 0;
+    do {
+        cin >> i;
+    } while (!CheckingValues(i, 1, 3));
+
+    switch (i)
+    {
+        case 1:
+        {
+            if (NewTube.length == 0)
+            {
+                cout << "Введены некорректные данные, сначала добавьте характеристики трубы" << endl;
+                return;
+            }
+            PrintTube(NewTube);
+            return;
+        }
+        case 2:
+        {
+            if (NewCS.workshops == 0)
+            {
+                cout << "Введены некорректные данные, сначала добавьте характеристики компрессорной станции" << endl;
+                return;
+            }
+            PrintCS(NewCS);
+            return;
+        }
+        case 3:
+        {
+            if ((NewCS.workshops == 0) || (NewTube.length == 0))
+            {
+                cout << "Введены некорректные данные, сначала добавьте характеристики трубы и компрессорной станции" << endl;
+                return;
+            }
+            PrintTube(NewTube);
+            PrintCS(NewCS);
+            return;
+        }
+    }
+}
+
 int main()
 {
     setlocale(LC_ALL, "rus"); 
 
-    tube NewTube;
-    cs NewCS;
+    tube NewTube = {0,0,0};
+    cs NewCS = {"",0,0,0};
 
     while (true)
     {
@@ -170,16 +214,17 @@ int main()
         {
             case 1:
             {
-                InputTube();
+                InputTube(NewTube);
                 break;
             }
             case 2:
             {
-                InputCS();
+                InputCS(NewCS);
                 break;
             }
             case 3:
             {
+                OutPut(NewTube, NewCS);
                 break;
             }
             case 4:
