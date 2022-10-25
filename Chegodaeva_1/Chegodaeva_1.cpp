@@ -65,12 +65,15 @@ void PrintTube(const tube& NewTube)
 
 void EditTube(tube& NewTube)
 {
+    char check = '0';
     do {
-        cin.clear();
-        cin.ignore(10000, '\n');
         cout << "Введите обновлённый статус трубы: " << endl;
         cin >> NewTube.status;
-    } while (!CheckingValues(NewTube.status));
+    } while (!CheckingValues(check, '0', '1'));
+    if (check == '1')
+    {
+        NewTube.status = true;
+    }
 }
 
 struct cs
@@ -111,11 +114,9 @@ void PrintCS(const cs& NewCS)
 void EditCS(cs& NewCS)
 {
     do {
-        cin.clear();
-        cin.ignore(10000, '\n');
         cout << "Введите обновлённое количество работающих цехов компрессорной станции: " << endl;
         cin >> NewCS.working_workshops;
-    } while (!CheckingValues(NewCS.working_workshops) || NewCS.working_workshops >= NewCS.workshops);
+    } while (!CheckingValues(NewCS.working_workshops, 0, NewCS.workshops));
 }
 
 void SaveAll(const tube& NewTube, const cs& NewCS)
@@ -229,11 +230,21 @@ int main()
             }
             case 4:
             {
+                if (NewTube.length == 0)
+                {
+                    cout << "Введены некорректные данные, сначала добавьте характеристики компрессорной станции" << endl;
+                    break;
+                }
                 EditTube(NewTube);
                 break;
             }
             case 5:
             {
+                if (NewCS.workshops == 0)
+                {
+                    cout << "Введены некорректные данные, сначала добавьте характеристики компрессорной станции" << endl;
+                    break;
+                }
                 EditCS(NewCS);
                 break;
             }
