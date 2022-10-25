@@ -154,18 +154,15 @@ void SaveAll(const tube& NewTube, const cs& NewCS)
         }
         case 2:
         {
-            
             fout << NewCS.name << endl << NewCS.workshops << endl << NewCS.working_workshops << endl << NewCS.efficiency << endl;
             return;
         }
         case 3:
         {
-            
             fout << NewTube.length << endl << NewTube.diameter << endl << NewTube.status << endl;
             fout << NewCS.name << endl << NewCS.workshops << endl << NewCS.working_workshops << endl << NewCS.efficiency << endl;
             return;
-        }
-        }
+        } }
         fout.close();
     }
 }
@@ -219,8 +216,7 @@ void OutPut(tube& NewTube, cs& NewCS)
             PrintTube(NewTube);
             PrintCS(NewCS);
             return;
-        }
-    }
+        } }
 }
 
 int main()
@@ -285,6 +281,5 @@ int main()
             {
                 cout << "Введите корректное значение пункта из меню:" << endl;
             }
-        }
-    }
+        }}
 }
