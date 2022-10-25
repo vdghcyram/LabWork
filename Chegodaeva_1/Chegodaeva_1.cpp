@@ -16,6 +16,18 @@ void consol()
         << "0. Выход" << endl;
 }
 
+template <typename T>
+bool CheckingValues(const T& Variable, T beginning = numeric_limits<T>::min(), T end = numeric_limits<T>::max())
+{
+    if (cin.fail() || cin.peek() != '\n' || Variable<beginning || Variable>end)
+    {
+        cin.clear();
+        cin.ignore(10000, '\n');
+        cout << "Введите корректные данные от " << beginning << " до " << end << endl;
+        return false;
+    } return true;
+}
+
 struct tube
 {
     double length;
@@ -23,36 +35,26 @@ struct tube
     bool status;
 };
 
-bool IsInformationCorrect(double d)
-{
-    return d > 0;
-}
-
-bool IsStatusCorrect(double d)
-{
-    return d >= 0 && d <= 1;
-}
 void InputTube()
 {
     tube NewTube;
     do{
-        cin.clear();
-        cin.ignore(10000, '\n');
-        cout << "Введите длину трубы:";
+        cout << "Введите длину трубы:" << endl;
         cin >> NewTube.length;
-    }while (cin.fail() || !IsInformationCorrect(NewTube.length));
+    }while (!CheckingValues(NewTube.length, 0.0001));
     do{
-        cin.clear();
-        cin.ignore(10000, '\n');
-        cout << "Введите диаметр трубы:";
+        cout << "Введите диаметр трубы:" << endl;
         cin >> NewTube.diameter;
-    }while (cin.fail() || !IsInformationCorrect(NewTube.diameter));
+    }while (!CheckingValues(NewTube.diameter,0.0001));
+    char check = '0';
     do{
-        cin.clear();
-        cin.ignore(10000, '\n');
-        cout << "Введите статус трубы: 1 - рабочее; 0 - в ремонте:";
-        cin >> NewTube.status;
-    }while (cin.fail() || !IsStatusCorrect(NewTube.status));
+        cout << "Введите статус трубы: 1 - рабочее; 0 - в ремонте:" << endl;
+        cin >> check;
+    }while (!CheckingValues(check,'0','1'));
+    if (check == '1')
+    {
+        NewTube.status = true;
+    }
 }
 
 void PrintTube(const tube& NewTube)
@@ -62,15 +64,14 @@ void PrintTube(const tube& NewTube)
         << "\tСтатус трубы:" << NewTube.status <<endl;
 }
 
-
 void EditTube(tube& NewTube)
 {
     do {
         cin.clear();
         cin.ignore(10000, '\n');
-        cout << "Введите обновлённый статус трубы:";
+        cout << "Введите обновлённый статус трубы:" << endl;
         cin >> NewTube.status;
-    } while (cin.fail() || !IsStatusCorrect(NewTube.status));
+    } while (!CheckingValues(NewTube.status));
 }
 
 struct cs
@@ -78,32 +79,26 @@ struct cs
     string name;
     int workshops;
     int working_workshops;
-    double efficiency;
+    int efficiency;
 };
 
 void InputCS()
 {
     cs NewCS;
-    cout << "Введите название компрессорной станции:";
+    cout << "Введите название компрессорной станции:" << endl;
     cin >> NewCS.name;
     do {
-        cin.clear();
-        cin.ignore(10000, '\n');
-        cout << "Введите количество всех цехов компрессорной станции:";
+        cout << "Введите количество всех цехов компрессорной станции:" << endl;
         cin >> NewCS.workshops;
-    } while (cin.fail() || !IsInformationCorrect(NewCS.workshops));
+    } while (!CheckingValues(NewCS.workshops, 1));
     do {
-        cin.clear();
-        cin.ignore(10000, '\n');
-        cout << "Введите количество работающих цехов компрессорной станции:";
+        cout << "Введите количество работающих цехов компрессорной станции:" << endl;
         cin >> NewCS.working_workshops;
-    } while (cin.fail() || !IsInformationCorrect(NewCS.working_workshops));
+    } while (!CheckingValues(NewCS.working_workshops, 0, NewCS.workshops));
     do {
-        cin.clear();
-        cin.ignore(10000, '\n');
-        cout << "Введите эффективность компрессорной станции:";
+        cout << "Введите эффективность компрессорной станции от 0 до 100:" << endl;
         cin >> NewCS.efficiency;
-    } while (cin.fail() || !IsInformationCorrect(NewCS.efficiency));
+    } while (!CheckingValues(NewCS.efficiency, 0, 100));
 
 }
 
@@ -120,9 +115,9 @@ void EditCS(cs& NewCS)
     do {
         cin.clear();
         cin.ignore(10000, '\n');
-        cout << "Введите обновлённое количество работающих цехов компрессорной станции:";
+        cout << "Введите обновлённое количество работающих цехов компрессорной станции:" << endl;
         cin >> NewCS.working_workshops;
-    } while (cin.fail() || !IsInformationCorrect(NewCS.working_workshops));
+    } while (!CheckingValues(NewCS.working_workshops) || NewCS.working_workshops >= NewCS.workshops);
 }
 
 void SaveAll(const tube& NewTube, const cs& NewCS)
@@ -158,12 +153,19 @@ void LoadAll()
 
 int main()
 {
-    setlocale(LC_ALL, "rus");       //Поддержка русского языка
-    while (1)
+    setlocale(LC_ALL, "rus"); 
+
+    tube NewTube;
+    cs NewCS;
+
+    while (true)
     {
         consol();
         int i = 0;
-        cin >> i;
+        do {
+            cin >> i;
+        } while (!CheckingValues(i, 0,7));
+
         switch (i)
         {
             case 1:
@@ -182,17 +184,17 @@ int main()
             }
             case 4:
             {
-                EditTube(tube & NewTube);
+                EditTube(NewTube);
                 break;
             }
             case 5:
             {
-                EditCS(cs & NewCS);
+                EditCS(NewCS);
                 break;
             }
             case 6:
             {
-                SaveAll(const tube & NewTube, const cs & NewCS);
+                SaveAll(NewTube, NewCS);
                 break;
             }
             case 7:
@@ -204,7 +206,10 @@ int main()
             {
                 return 0;
             }
+            default:
+            {
+                cout << "Введите корректное значение пункта из меню:" << endl;
+            }
         }
-
     }
 }
