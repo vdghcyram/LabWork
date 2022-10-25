@@ -123,12 +123,14 @@ void SaveAll(const tube& NewTube, const cs& NewCS)
 {
     ofstream fout;
     fout.open("data.txt", ios::out);
+    NonExistentValues(NewTube, NewCS);
     if (fout.is_open())
     {
         fout << NewTube.length << endl << NewTube.diameter << endl << NewTube.status << endl;
         fout << NewCS.name << endl << NewCS.workshops << endl << NewCS.working_workshops << endl << NewCS.efficiency << endl;
         fout.close();
     }
+
 }
 
 void LoadAll()
@@ -150,6 +152,15 @@ void LoadAll()
     }
 }
 
+void NonExistentValues(tube& NewTube, cs& NewCS)
+{
+    if ((NewCS.workshops == 0) || (NewTube.length == 0))
+    {
+        cout << "Введены некорректные данные, сначала добавьте характеристики трубы и компрессорной станции" << endl;
+        return;
+    }
+}
+
 void OutPut(tube& NewTube, cs& NewCS)
 {
     cout << "1. Вывести информацию по трубе" << endl
@@ -164,31 +175,19 @@ void OutPut(tube& NewTube, cs& NewCS)
     {
         case 1:
         {
-            if (NewTube.length == 0)
-            {
-                cout << "Введены некорректные данные, сначала добавьте характеристики трубы" << endl;
-                return;
-            }
+            NonExistentValues(NewTube, NewCS);
             PrintTube(NewTube);
             return;
         }
         case 2:
         {
-            if (NewCS.workshops == 0)
-            {
-                cout << "Введены некорректные данные, сначала добавьте характеристики компрессорной станции" << endl;
-                return;
-            }
+            NonExistentValues(NewTube, NewCS);
             PrintCS(NewCS);
             return;
         }
         case 3:
         {
-            if ((NewCS.workshops == 0) || (NewTube.length == 0))
-            {
-                cout << "Введены некорректные данные, сначала добавьте характеристики трубы и компрессорной станции" << endl;
-                return;
-            }
+            NonExistentValues(NewTube, NewCS);
             PrintTube(NewTube);
             PrintCS(NewCS);
             return;
@@ -230,21 +229,13 @@ int main()
             }
             case 4:
             {
-                if (NewTube.length == 0)
-                {
-                    cout << "Введены некорректные данные, сначала добавьте характеристики компрессорной станции" << endl;
-                    break;
-                }
+                NonExistentValues(NewTube, NewCS);
                 EditTube(NewTube);
                 break;
             }
             case 5:
             {
-                if (NewCS.workshops == 0)
-                {
-                    cout << "Введены некорректные данные, сначала добавьте характеристики компрессорной станции" << endl;
-                    break;
-                }
+                NonExistentValues(NewTube, NewCS);
                 EditCS(NewCS);
                 break;
             }
