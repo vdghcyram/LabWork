@@ -1,5 +1,6 @@
 ﻿#include <iostream>
 #include <fstream>
+#include <string>
 
 using namespace std;
 
@@ -63,17 +64,20 @@ void PrintTube(const tube& NewTube)
         << "Статус трубы: " << NewTube.status <<endl;
 }
 
-void EditTube(tube& NewTube)
+bool EditTube(tube& NewTube)
 {
-    char check = '0';
-    do {
-        cout << "Введите обновлённый статус трубы: " << endl;
-        cin >> NewTube.status;
-    } while (!CheckingValues(check, '0', '1'));
-    if (check == '1')
+    if (NewTube.length = 0)
     {
-        NewTube.status = true;
-    }
+        char check = '0';
+        do {
+            cout << "Введите обновлённый статус трубы: " << endl;
+            cin >> check;
+        } while (!CheckingValues(check, '0', '1'));
+        if (check == '1')
+        {
+            NewTube.status = true;
+        }return false;
+    }return true;
 }
 
 struct cs
@@ -87,7 +91,8 @@ struct cs
 void InputCS(cs& NewCS)
 {
     cout << "Введите название компрессорной станции:" << endl;
-    cin >> NewCS.name;
+    cin >> ws;
+    getline(cin,NewCS.name);
     do {
         cout << "Введите количество всех цехов компрессорной станции:" << endl;
         cin >> NewCS.workshops;
@@ -113,10 +118,18 @@ void PrintCS(const cs& NewCS)
 
 void EditCS(cs& NewCS)
 {
-    do {
-        cout << "Введите обновлённое количество работающих цехов компрессорной станции: " << endl;
-        cin >> NewCS.working_workshops;
-    } while (!CheckingValues(NewCS.working_workshops, 0, NewCS.workshops));
+    if (NewCS.workshops = 0)
+    {
+        char check = '0';
+        do {
+            cout << "Введите обновлённое количество работающих цехов компрессорной станции: " << endl;
+            cin >> check;
+        } while (!CheckingValues(check, '0', '1'));
+        if (check == '1')
+        {
+            NewCS.working_workshops = true;
+        }
+    }return;
 }
 
 bool NonExistentValues(const tube& NewTube,const cs& NewCS)
@@ -167,17 +180,15 @@ void SaveAll(const tube& NewTube, const cs& NewCS)
     }
 }
 
-void LoadAll()
+void LoadAll(tube& NewTube, cs& NewCS)
 {
     ifstream fin;
     fin.open("data.txt", ios::in);
     if (fin.is_open())
     {
-        tube NewTube;
         fin >> NewTube.length;
         fin >> NewTube.diameter;
         fin >> NewTube.status;
-        cs NewCS;
         fin >> NewCS.name;
         fin >> NewCS.workshops;
         fin >> NewCS.working_workshops;
@@ -270,7 +281,7 @@ int main()
             }
             case 7:
             {
-                LoadAll();
+                LoadAll(NewTube, NewCS);
                 break;
             }
             case 0:
