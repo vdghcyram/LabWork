@@ -76,9 +76,19 @@ void EditCS(cs& NewCS)
     }return;
 }
 
-bool NonExistentValues(const tube& NewTube,const cs& NewCS)
+bool NonExistentValuesTube(const tube& NewTube)
 {
-    if ((NewCS.workshops == 0) || (NewTube.length == 0))
+    if (NewTube.length == 0)
+    {
+        cout << "Введены некорректные данные, сначала добавьте характеристики трубы и компрессорной станции" << endl;
+        return false;
+    }
+    return true;
+}
+
+bool NonExistentValuesCS(const cs& NewCS)
+{
+    if (NewCS.workshops == 0)
     {
         cout << "Введены некорректные данные, сначала добавьте характеристики трубы и компрессорной станции" << endl;
         return false;
@@ -90,7 +100,7 @@ void SaveAll(const tube& NewTube, const cs& NewCS)
 {
     ofstream fout;
     fout.open("data.txt", ios::out);
-    if (!NonExistentValues(NewTube, NewCS)) 
+    if (!NonExistentValuesTube(NewTube) && !NonExistentValuesCS(NewCS))
         return;
     if (fout.is_open())
     {
@@ -141,7 +151,24 @@ void LoadAll(tube& NewTube, cs& NewCS)
     }
 }
 
-void OutPut(tube& NewTube, cs& NewCS)
+ostream& operator << (ostream& out, const tube& NewTube)
+{
+    out << "Длина трубы: " << NewTube.length << endl
+        << "Диаметр трубы: " << NewTube.diameter << endl
+        << "Статус трубы: " << NewTube.status << endl;
+    return out;
+}
+
+ostream& operator << (ostream& out, const cs& NewCS)
+{
+    out << "Название компрессорной станции: " << NewCS.name << endl
+        << "Количество всех цехов компрессорной станции: " << NewCS.workshops << endl
+        << "Количество работающих цехов компрессорной станции: " << NewCS.working_workshops << endl
+        << "Эффективность компрессорной станции: " << NewCS.efficiency << endl;
+    return out;
+}
+
+void OutPut (const tube& NewTube, const cs& NewCS)
 {
     cout << "1. Вывести информацию по трубе" << endl
         << "2. Вывести информацию по компрессорной станции" << endl
@@ -155,26 +182,27 @@ void OutPut(tube& NewTube, cs& NewCS)
     {
         case 1:
         {
-            NonExistentValues(NewTube, NewCS);
+            NonExistentValuesTube(NewTube);
             cout << NewTube;
             return;
         }
         case 2:
         {
-            NonExistentValues(NewTube, NewCS);
+            NonExistentValuesCS(NewCS);
             cout << NewCS;
             return;
         }
         case 3:
         {
-            NonExistentValues(NewTube, NewCS);
+            NonExistentValuesTube(NewTube);
+            NonExistentValuesCS(NewCS);
             cout << NewTube;
             cout << NewCS;
             return;
         } }
 }
 
-void operator >> (istream& in, tube& NewTube)
+istream& operator >> (istream& in, tube& NewTube)
 {
     do {
         cout << "Введите длину трубы: " << endl;
@@ -192,17 +220,10 @@ void operator >> (istream& in, tube& NewTube)
     if (check == '1')
     {
         NewTube.status = true;
-    }
+    }return in;
 }
 
-void operator << (ostream& out, const tube& NewTube)
-{
-    out << "Длина трубы: " << NewTube.length << endl
-        << "Диаметр трубы: " << NewTube.diameter << endl
-        << "Статус трубы: " << NewTube.status << endl;
-}
-
-void operator >> (istream& in, cs& NewCS)
+istream& operator >> (istream& in, cs& NewCS)
 {
     cout << "Введите название компрессорной станции:" << endl;
     in >> ws;
@@ -219,14 +240,7 @@ void operator >> (istream& in, cs& NewCS)
         cout << "Введите эффективность компрессорной станции от 0 до 100:" << endl;
         cin >> NewCS.efficiency;
     } while (!CheckingValues(NewCS.efficiency, 0, 100));
-}
-
-void operator << (ostream& out, const cs& NewCS)
-{
-    out << "Название компрессорной станции: " << NewCS.name << endl
-        << "Количество всех цехов компрессорной станции: " << NewCS.workshops << endl
-        << "Количество работающих цехов компрессорной станции: " << NewCS.working_workshops << endl
-        << "Эффективность компрессорной станции: " << NewCS.efficiency << endl;
+    return in;
 }
 
 int main()
@@ -263,13 +277,15 @@ int main()
             }
             case 4:
             {
-                NonExistentValues(NewTube, NewCS);
+                NonExistentValuesTube(NewTube);
+                NonExistentValuesCS(NewCS);
                 EditTube(NewTube);
                 break;
             }
             case 5:
             {
-                NonExistentValues(NewTube, NewCS);
+                NonExistentValuesTube(NewTube);
+                NonExistentValuesCS(NewCS);
                 EditCS(NewCS);
                 break;
             }
