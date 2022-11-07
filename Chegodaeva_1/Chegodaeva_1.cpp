@@ -2,6 +2,8 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include "tube.h"
+#include "cs.h"
 
 using namespace std;
 
