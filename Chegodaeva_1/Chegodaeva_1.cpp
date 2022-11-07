@@ -172,34 +172,28 @@ ostream& operator << (ostream& out, const cs& NewCS)
 
 tube& SelectTube(vector <tube>& GroupTube)
 {
-    if (GroupTube.size() != 0)
-    {
         int index;
         cout << "Введите номер трубы: ";
         do {
             cin >> index;
-        } while (!CheckingValues(1, (int)GroupTube.size()));
+        } while (!CheckingValues(index, 1, (int)GroupTube.size()));
         return GroupTube[index - 1];
-    }return;
 }
 
 cs& SelectCS(vector <cs>& GroupCS)
 {
-    if (GroupCS.size() != 0)
-    {
     int index;
     cout << "Введите номер компрессорной станции: ";
     do {
         cin >> index;
-    } while (!CheckingValues(1, (int)GroupCS.size()));
+    } while (!CheckingValues(index, 1, (int)GroupCS.size()));
     return GroupCS[index - 1];
-    }return;
 }
 
 void OutPut (const vector <tube>& GroupTube, const vector <cs>& GroupCS)
 {
-    cout << "1. Вывести информацию по трубе" << endl
-        << "2. Вывести информацию по компрессорной станции" << endl
+    cout << "1. Вывести информацию по трубам" << endl
+        << "2. Вывести информацию по компрессорным станциям" << endl
         << "3. Вывести информацию по всем объектам" << endl;
     int i = 0;
     do {
@@ -210,23 +204,32 @@ void OutPut (const vector <tube>& GroupTube, const vector <cs>& GroupCS)
     {
         case 1:
         {
-            NonExistentValuesTube(GroupTube);
-            cout << SelectTube(GroupTube) << endl;
-            return;
+            for (tube NewTube : GroupTube)
+            {
+                //NonExistentValuesTube(NewTube);
+                cout << NewTube << endl;
+            }return;
         }
         case 2:
         {
-            NonExistentValuesCS(GroupCS);
-            cout << SelectCS(GroupCS) << endl;
-            return;
+            for (cs NewCS : GroupCS)
+            {
+                //NonExistentValuesTube(NewTube);
+                cout << NewCS << endl;
+            }return;
         }
         case 3:
         {
-            NonExistentValuesTube(NewTube);
-            NonExistentValuesCS(NewCS);
-            cout << NewTube;
-            cout << NewCS;
-            return;
+            for (tube NewTube : GroupTube)
+            {
+                //NonExistentValuesTube(NewTube);
+                cout << NewTube << endl;
+            }return;
+            for (cs NewCS : GroupCS)
+            {
+                //NonExistentValuesTube(NewTube);
+                cout << NewCS << endl;
+            }return;
         } }
 }
 
@@ -305,21 +308,25 @@ int main()
             }
             case 3:
             {
-                OutPut(NewTube, NewCS);
+                OutPut(GroupTube, GroupCS);
                 break;
             }
             case 4:
             {
-                NonExistentValuesTube(NewTube);
-                NonExistentValuesCS(NewCS);
-                EditTube(SelectTube(GroupTube));
+                //NonExistentValuesTube(NewTube);
+                if (GroupTube.size() != 0)
+                {
+                    EditTube(SelectTube(GroupTube));
+                }
                 break;
             }
             case 5:
             {
-                NonExistentValuesTube(NewTube);
-                NonExistentValuesCS(NewCS);
-                EditCS(SelectCS(GroupCS));
+                //NonExistentValuesCS(NewCS);
+                if (GroupCS.size() != 0)
+                {
+                    EditCS(SelectCS(GroupCS));
+                }
                 break;
             }
             case 6:
