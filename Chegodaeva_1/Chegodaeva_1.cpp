@@ -1,6 +1,7 @@
 ﻿#include <iostream>
 #include <fstream>
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -14,7 +15,8 @@ void consol()
         << "5. Редактировать КС" << endl
         << "6. Сохранить" << endl
         << "7. Загрузить" << endl
-        << "0. Выход" << endl;
+        << "0. Выход" << endl
+        << "Введите номер пункта: ";
 }
 
 template <typename T>
@@ -80,7 +82,7 @@ bool NonExistentValuesTube(const tube& NewTube)
 {
     if (NewTube.length == 0)
     {
-        cout << "Введены некорректные данные, сначала добавьте характеристики трубы и компрессорной станции" << endl;
+        cout << "Введены некорректные данные, сначала добавьте характеристики трубы" << endl;
         return false;
     }
     return true;
@@ -90,7 +92,7 @@ bool NonExistentValuesCS(const cs& NewCS)
 {
     if (NewCS.workshops == 0)
     {
-        cout << "Введены некорректные данные, сначала добавьте характеристики трубы и компрессорной станции" << endl;
+        cout << "Введены некорректные данные, сначала добавьте характеристики компрессорной станции" << endl;
         return false;
     }
     return true;
@@ -168,7 +170,33 @@ ostream& operator << (ostream& out, const cs& NewCS)
     return out;
 }
 
-void OutPut (const tube& NewTube, const cs& NewCS)
+tube& SelectTube(vector <tube>& GroupTube)
+{
+    if (GroupTube.size() != 0)
+    {
+        int index;
+        cout << "Введите номер трубы: ";
+        do {
+            cin >> index;
+        } while (!CheckingValues(1, (int)GroupTube.size()));
+        return GroupTube[index - 1];
+    }return;
+}
+
+cs& SelectCS(vector <cs>& GroupCS)
+{
+    if (GroupCS.size() != 0)
+    {
+    int index;
+    cout << "Введите номер компрессорной станции: ";
+    do {
+        cin >> index;
+    } while (!CheckingValues(1, (int)GroupCS.size()));
+    return GroupCS[index - 1];
+    }return;
+}
+
+void OutPut (const vector <tube>& GroupTube, const vector <cs>& GroupCS)
 {
     cout << "1. Вывести информацию по трубе" << endl
         << "2. Вывести информацию по компрессорной станции" << endl
@@ -182,14 +210,14 @@ void OutPut (const tube& NewTube, const cs& NewCS)
     {
         case 1:
         {
-            NonExistentValuesTube(NewTube);
-            cout << NewTube;
+            NonExistentValuesTube(GroupTube);
+            cout << SelectTube(GroupTube) << endl;
             return;
         }
         case 2:
         {
-            NonExistentValuesCS(NewCS);
-            cout << NewCS;
+            NonExistentValuesCS(GroupCS);
+            cout << SelectCS(GroupCS) << endl;
             return;
         }
         case 3:
@@ -246,7 +274,8 @@ istream& operator >> (istream& in, cs& NewCS)
 int main()
 {
     setlocale(LC_ALL, "rus"); 
-
+    vector <tube> GroupTube;
+    vector <cs> GroupCS;
     tube NewTube = {0,0,0};
     cs NewCS = {"",0,0,0};
 
@@ -262,12 +291,16 @@ int main()
         {
             case 1:
             {
+                tube NewTube;
                 cin >> NewTube;
+                GroupTube.push_back(NewTube);
                 break;
             }
             case 2:
             {
+                cs NewCS;
                 cin >> NewCS;
+                GroupCS.push_back(NewCS);
                 break;
             }
             case 3:
@@ -279,14 +312,14 @@ int main()
             {
                 NonExistentValuesTube(NewTube);
                 NonExistentValuesCS(NewCS);
-                EditTube(NewTube);
+                EditTube(SelectTube(GroupTube));
                 break;
             }
             case 5:
             {
                 NonExistentValuesTube(NewTube);
                 NonExistentValuesCS(NewCS);
-                EditCS(NewCS);
+                EditCS(SelectCS(GroupCS));
                 break;
             }
             case 6:
