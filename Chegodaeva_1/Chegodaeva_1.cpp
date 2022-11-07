@@ -98,16 +98,14 @@ bool NonExistentValuesCS(const cs& NewCS)
     return true;
 }
 
-void SaveAll(const tube& NewTube, const cs& NewCS)
+void SaveAll(const vector <tube>& GroupTube, const vector <cs>& GroupCS)
 {
     ofstream fout;
     fout.open("data.txt", ios::out);
-    if (!NonExistentValuesTube(NewTube) && !NonExistentValuesCS(NewCS))
-        return;
     if (fout.is_open())
     {
-        cout << "1. Сохранить информацию по трубе" << endl
-            << "2. Сохранить информацию по компрессорной станции" << endl
+        cout << "1. Сохранить информацию по трубам" << endl
+            << "2. Сохранить информацию по компрессорным станциям" << endl
             << "3. Сохранить информацию по всем объектам" << endl;
         int i = 0;
         do {
@@ -118,37 +116,65 @@ void SaveAll(const tube& NewTube, const cs& NewCS)
         {
         case 1:
         {
-            fout << NewTube.length << endl << NewTube.diameter << endl << NewTube.status << endl;
-            return;
+            for (tube NewTube : GroupTube)
+            {
+                fout << GroupTube.size() << endl;
+                fout << NewTube.length << endl << NewTube.diameter << endl << NewTube.status << endl;
+            }
         }
         case 2:
         {
-            fout << NewCS.name << endl << NewCS.workshops << endl << NewCS.working_workshops << endl << NewCS.efficiency << endl;
-            return;
+            for (cs NewCS : GroupCS)
+            {
+                fout << GroupCS.size() << endl;
+                fout << NewCS.name << endl << NewCS.workshops << endl << NewCS.working_workshops << endl << NewCS.efficiency << endl;
+            }
         }
         case 3:
         {
-            fout << NewTube.length << endl << NewTube.diameter << endl << NewTube.status << endl;
-            fout << NewCS.name << endl << NewCS.workshops << endl << NewCS.working_workshops << endl << NewCS.efficiency << endl;
-            return;
-        } }
+            for (tube NewTube : GroupTube)
+            {
+                fout << GroupTube.size() << endl;
+                fout << NewTube.length << endl << NewTube.diameter << endl << NewTube.status << endl;
+            }
+            for (cs NewCS : GroupCS)
+            {
+                fout << GroupCS.size() << endl;
+                fout << NewCS.name << endl << NewCS.workshops << endl << NewCS.working_workshops << endl << NewCS.efficiency << endl;
+            }
+        }
+        }
         fout.close();
     }
 }
 
-void LoadAll(tube& NewTube, cs& NewCS)
+void LoadAll(vector <tube>& GroupTube, vector <cs>& GroupCS)
 {
     ifstream fin;
     fin.open("data.txt", ios::in);
     if (fin.is_open())
     {
-        fin >> NewTube.length;
-        fin >> NewTube.diameter;
-        fin >> NewTube.status;
-        fin >> NewCS.name;
-        fin >> NewCS.workshops;
-        fin >> NewCS.working_workshops;
-        fin >> NewCS.efficiency;
+        int NumberTube;
+        int NumberCS;
+        fin >> NumberTube;
+        while (NumberTube--)
+        {  
+            tube NewTube;
+            fin >> NewTube.length;
+            fin >> NewTube.diameter;
+            fin >> NewTube.status;
+            GroupTube.push_back(NewTube);
+        }
+        fin >> NumberCS;
+        while (NumberCS--) 
+        {
+            cs NewCS;
+            fin >> NewCS.name;
+            fin >> NewCS.workshops;
+            fin >> NewCS.working_workshops;
+            fin >> NewCS.efficiency;
+            GroupCS.push_back(NewCS);
+        }
         fin.close();
     }
 }
@@ -206,7 +232,6 @@ void OutPut (const vector <tube>& GroupTube, const vector <cs>& GroupCS)
         {
             for (tube NewTube : GroupTube)
             {
-                //NonExistentValuesTube(NewTube);
                 cout << NewTube << endl;
             }return;
         }
@@ -214,7 +239,6 @@ void OutPut (const vector <tube>& GroupTube, const vector <cs>& GroupCS)
         {
             for (cs NewCS : GroupCS)
             {
-                //NonExistentValuesTube(NewTube);
                 cout << NewCS << endl;
             }return;
         }
@@ -222,12 +246,10 @@ void OutPut (const vector <tube>& GroupTube, const vector <cs>& GroupCS)
         {
             for (tube NewTube : GroupTube)
             {
-                //NonExistentValuesTube(NewTube);
                 cout << NewTube << endl;
             }return;
             for (cs NewCS : GroupCS)
             {
-                //NonExistentValuesTube(NewTube);
                 cout << NewCS << endl;
             }return;
         } }
@@ -313,7 +335,6 @@ int main()
             }
             case 4:
             {
-                //NonExistentValuesTube(NewTube);
                 if (GroupTube.size() != 0)
                 {
                     EditTube(SelectTube(GroupTube));
@@ -322,7 +343,6 @@ int main()
             }
             case 5:
             {
-                //NonExistentValuesCS(NewCS);
                 if (GroupCS.size() != 0)
                 {
                     EditCS(SelectCS(GroupCS));
@@ -331,12 +351,12 @@ int main()
             }
             case 6:
             {
-                SaveAll(NewTube, NewCS);
+                SaveAll(GroupTube, GroupCS);
                 break;
             }
             case 7:
             {
-                LoadAll(NewTube, NewCS);
+                LoadAll(GroupTube, GroupCS);
                 break;
             }
             case 0:
