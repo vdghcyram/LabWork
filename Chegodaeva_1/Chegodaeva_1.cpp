@@ -31,13 +31,6 @@ bool CheckingValues(const T& Variable, T beginning = numeric_limits<T>::min(), T
     } return true;
 }
 
-struct tube
-{
-    double length;
-    double diameter;
-    bool status;
-};
-
 bool EditTube(tube& NewTube)
 {
     if (NewTube.length = 0)
@@ -53,14 +46,6 @@ bool EditTube(tube& NewTube)
         }return false;
     }return true;
 }
-
-struct cs
-{
-    string name;
-    int workshops;
-    int working_workshops;
-    int efficiency;
-};
 
 void EditCS(cs& NewCS)
 {
