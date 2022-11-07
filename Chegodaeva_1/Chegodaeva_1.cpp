@@ -36,27 +36,6 @@ struct tube
     bool status;
 };
 
-void InputTube(tube& NewTube)
-{
-    do{
-        cout << "Введите длину трубы: " << endl;
-        cin >> NewTube.length;
-    }while (!CheckingValues(NewTube.length, 0.0001));
-    do{
-        cout << "Введите диаметр трубы: " << endl;
-        cin >> NewTube.diameter;
-    }while (!CheckingValues(NewTube.diameter,0.0001));
-    char check = '0';
-    do{
-        cout << "Введите статус трубы: 1 - рабочее; 0 - в ремонте: " << endl;
-        cin >> check;
-    }while (!CheckingValues(check,'0','1'));
-    if (check == '1')
-    {
-        NewTube.status = true;
-    }
-}
-
 void PrintTube(const tube& NewTube)
 {
     cout << "Длина трубы: " << NewTube.length << endl
@@ -87,26 +66,6 @@ struct cs
     int working_workshops;
     int efficiency;
 };
-
-void InputCS(cs& NewCS)
-{
-    cout << "Введите название компрессорной станции:" << endl;
-    cin >> ws;
-    getline(cin,NewCS.name);
-    do {
-        cout << "Введите количество всех цехов компрессорной станции:" << endl;
-        cin >> NewCS.workshops;
-    } while (!CheckingValues(NewCS.workshops, 1));
-    do {
-        cout << "Введите количество работающих цехов компрессорной станции:" << endl;
-        cin >> NewCS.working_workshops;
-    } while (!CheckingValues(NewCS.working_workshops, 0, NewCS.workshops));
-    do {
-        cout << "Введите эффективность компрессорной станции от 0 до 100:" << endl;
-        cin >> NewCS.efficiency;
-    } while (!CheckingValues(NewCS.efficiency, 0, 100));
-
-}
 
 void PrintCS(const cs& NewCS)
 {
@@ -230,6 +189,46 @@ void OutPut(tube& NewTube, cs& NewCS)
         } }
 }
 
+void operator >> (istream& in, tube& NewTube)
+{
+    do {
+        cout << "Введите длину трубы: " << endl;
+        cin >> NewTube.length;
+    } while (!CheckingValues(NewTube.length, 0.0001));
+    do {
+        cout << "Введите диаметр трубы: " << endl;
+        cin >> NewTube.diameter;
+    } while (!CheckingValues(NewTube.diameter, 0.0001));
+    char check = '0';
+    do {
+        cout << "Введите статус трубы: 1 - рабочее; 0 - в ремонте: " << endl;
+        cin >> check;
+    } while (!CheckingValues(check, '0', '1'));
+    if (check == '1')
+    {
+        NewTube.status = true;
+    }
+}
+
+void operator >> (istream& in, cs& NewCS)
+{
+    cout << "Введите название компрессорной станции:" << endl;
+    in >> ws;
+    getline(cin, NewCS.name);
+    do {
+        cout << "Введите количество всех цехов компрессорной станции:" << endl;
+        cin >> NewCS.workshops;
+    } while (!CheckingValues(NewCS.workshops, 1));
+    do {
+        cout << "Введите количество работающих цехов компрессорной станции:" << endl;
+        cin >> NewCS.working_workshops;
+    } while (!CheckingValues(NewCS.working_workshops, 0, NewCS.workshops));
+    do {
+        cout << "Введите эффективность компрессорной станции от 0 до 100:" << endl;
+        cin >> NewCS.efficiency;
+    } while (!CheckingValues(NewCS.efficiency, 0, 100));
+}
+
 int main()
 {
     setlocale(LC_ALL, "rus"); 
@@ -249,12 +248,12 @@ int main()
         {
             case 1:
             {
-                InputTube(NewTube);
+                cin >> NewTube;
                 break;
             }
             case 2:
             {
-                InputCS(NewCS);
+                cin >> NewCS;
                 break;
             }
             case 3:
