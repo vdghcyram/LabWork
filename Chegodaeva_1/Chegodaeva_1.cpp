@@ -36,13 +36,6 @@ struct tube
     bool status;
 };
 
-void PrintTube(const tube& NewTube)
-{
-    cout << "Длина трубы: " << NewTube.length << endl
-        << "Диаметр трубы: " << NewTube.diameter << endl
-        << "Статус трубы: " << NewTube.status <<endl;
-}
-
 bool EditTube(tube& NewTube)
 {
     if (NewTube.length = 0)
@@ -66,14 +59,6 @@ struct cs
     int working_workshops;
     int efficiency;
 };
-
-void PrintCS(const cs& NewCS)
-{
-    cout << "Название компрессорной станции: " << NewCS.name <<endl
-        << "Количество всех цехов компрессорной станции: " << NewCS.workshops << endl
-        << "Количество работающих цехов компрессорной станции: " << NewCS.working_workshops << endl
-        << "Эффективность компрессорной станции: " << NewCS.efficiency << endl;
-}
 
 void EditCS(cs& NewCS)
 {
@@ -171,20 +156,20 @@ void OutPut(tube& NewTube, cs& NewCS)
         case 1:
         {
             NonExistentValues(NewTube, NewCS);
-            PrintTube(NewTube);
+            cout << NewTube;
             return;
         }
         case 2:
         {
             NonExistentValues(NewTube, NewCS);
-            PrintCS(NewCS);
+            cout << NewCS;
             return;
         }
         case 3:
         {
             NonExistentValues(NewTube, NewCS);
-            PrintTube(NewTube);
-            PrintCS(NewCS);
+            cout << NewTube;
+            cout << NewCS;
             return;
         } }
 }
@@ -210,6 +195,13 @@ void operator >> (istream& in, tube& NewTube)
     }
 }
 
+void operator << (ostream& out, const tube& NewTube)
+{
+    out << "Длина трубы: " << NewTube.length << endl
+        << "Диаметр трубы: " << NewTube.diameter << endl
+        << "Статус трубы: " << NewTube.status << endl;
+}
+
 void operator >> (istream& in, cs& NewCS)
 {
     cout << "Введите название компрессорной станции:" << endl;
@@ -227,6 +219,14 @@ void operator >> (istream& in, cs& NewCS)
         cout << "Введите эффективность компрессорной станции от 0 до 100:" << endl;
         cin >> NewCS.efficiency;
     } while (!CheckingValues(NewCS.efficiency, 0, 100));
+}
+
+void operator << (ostream& out, const cs& NewCS)
+{
+    out << "Название компрессорной станции: " << NewCS.name << endl
+        << "Количество всех цехов компрессорной станции: " << NewCS.workshops << endl
+        << "Количество работающих цехов компрессорной станции: " << NewCS.working_workshops << endl
+        << "Эффективность компрессорной станции: " << NewCS.efficiency << endl;
 }
 
 int main()
