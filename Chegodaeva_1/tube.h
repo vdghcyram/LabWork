@@ -20,7 +20,7 @@ public:
        
     }
 
-    bool EditTube();
+    void EditTube();
     friend istream& operator >> (istream& in, tube& NewTube);
     friend ifstream& operator >> (ifstream& fin, tube& NewTube);
     friend ofstream& operator << (ofstream& fout, tube& NewTube);

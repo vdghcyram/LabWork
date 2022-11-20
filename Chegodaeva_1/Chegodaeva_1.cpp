@@ -32,36 +32,55 @@ bool CheckingValues(const T& Variable, T beginning = numeric_limits<T>::min(), T
     } return true;
 }
 
-bool tube::EditTube()
+void tube::EditTube()
 {
-    if (length = 0)
-    {
+        do
+        {
+        cout << "Введите обновленную длину трубы: " << endl;
+        cin >> length;
+        } while (!CheckingValues(length, 0.0001));
+        do 
+        {
+            cout << "Введите обновленный диаметр трубы: " << endl;
+            cin >> diameter;
+        } while (!CheckingValues(diameter, 0.0001));
         char check = '0';
-        do {
-            cout << "Введите обновлённый статус трубы: " << endl;
+        status = false;
+        do 
+        {
+            cout << "Введите обновленный статус трубы: 1 - рабочее; 0 - в ремонте: " << endl;
             cin >> check;
         } while (!CheckingValues(check, '0', '1'));
         if (check == '1')
         {
             status = true;
-        }return false;
-    }return true;
+        }
+}
+
+void DeleteTube(vector<tube> GroupTube, tube& NewTube)
+{
+
 }
 
 void cs::EditCS()
 {
-    if (workshops = 0)
     {
-        char check = '0';
-        do {
-            cout << "Введите обновлённое количество работающих цехов компрессорной станции: " << endl;
-            cin >> check;
-        } while (!CheckingValues(check, '0', '1'));
-        if (check == '1')
-        {
-            working_workshops = true;
-        }
-    }return;
+        cout << "Введите название компрессорной станции:" << endl;
+        cin >> ws;
+        getline(cin, name);
+    }
+    do {
+        cout << "Введите количество всех цехов компрессорной станции:" << endl;
+        cin >> workshops;
+    } while (!CheckingValues(workshops, 1));
+    do {
+        cout << "Введите количество работающих цехов компрессорной станции:" << endl;
+        cin >> working_workshops;
+    } while (!CheckingValues(working_workshops, 0, workshops));
+    do {
+        cout << "Введите эффективность компрессорной станции от 0 до 100:" << endl;
+        cin >> efficiency;
+    } while (!CheckingValues(efficiency, 0, 100));
 }
 
 ofstream& operator << (ofstream& fout, tube& NewTube)
