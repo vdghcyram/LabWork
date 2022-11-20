@@ -6,7 +6,6 @@
 #include "cs.h"
 
 using namespace std;
-
 void consol()
 {
     cout << "Меню:" << endl
@@ -33,9 +32,9 @@ bool CheckingValues(const T& Variable, T beginning = numeric_limits<T>::min(), T
     } return true;
 }
 
-bool EditTube(tube& NewTube)
+bool tube::EditTube()
 {
-    if (NewTube.length = 0)
+    if (length = 0)
     {
         char check = '0';
         do {
@@ -44,14 +43,14 @@ bool EditTube(tube& NewTube)
         } while (!CheckingValues(check, '0', '1'));
         if (check == '1')
         {
-            NewTube.status = true;
+            status = true;
         }return false;
     }return true;
 }
 
-void EditCS(cs& NewCS)
+void cs::EditCS()
 {
-    if (NewCS.workshops = 0)
+    if (workshops = 0)
     {
         char check = '0';
         do {
@@ -60,29 +59,21 @@ void EditCS(cs& NewCS)
         } while (!CheckingValues(check, '0', '1'));
         if (check == '1')
         {
-            NewCS.working_workshops = true;
+            working_workshops = true;
         }
     }return;
 }
 
-bool NonExistentValuesTube(const tube& NewTube)
+ofstream& operator << (ofstream& fout, tube& NewTube)
 {
-    if (NewTube.length == 0)
-    {
-        cout << "Введены некорректные данные, сначала добавьте характеристики трубы" << endl;
-        return false;
-    }
-    return true;
+    fout /*<< NewTube.id*/ /*<< endl*/ << NewTube.length << endl << NewTube.diameter << endl << NewTube.status << endl;
+    return fout;
 }
 
-bool NonExistentValuesCS(const cs& NewCS)
+ofstream& operator << (ofstream& fout, cs& NewCS)
 {
-    if (NewCS.workshops == 0)
-    {
-        cout << "Введены некорректные данные, сначала добавьте характеристики компрессорной станции" << endl;
-        return false;
-    }
-    return true;
+    fout /*<< NewCS.id*/ /*<< endl*/ << NewCS.name << endl << NewCS.workshops << endl << NewCS.working_workshops << endl << NewCS.efficiency << endl;
+    return fout;
 }
 
 void SaveAll(const vector <tube>& GroupTube, const vector <cs>& GroupCS)
@@ -103,36 +94,73 @@ void SaveAll(const vector <tube>& GroupTube, const vector <cs>& GroupCS)
         {
         case 1:
         {
-            for (tube NewTube : GroupTube)
+            if (GroupTube.size() != 0)
             {
-                fout << GroupTube.size() << endl;
-                fout << NewTube.length << endl << NewTube.diameter << endl << NewTube.status << endl;
+                for (tube NewTube : GroupTube)
+                {
+                    fout << GroupTube.size() << endl;
+                    fout << NewTube;
+                }
             }
+            else
+                cout << "Введены некорректные данные, сначала добавьте характеристики по трубам" << endl;
+            break;
         }
         case 2:
         {
+            if (GroupCS.size() != 0)
+            {
             for (cs NewCS : GroupCS)
             {
                 fout << GroupCS.size() << endl;
-                fout << NewCS.name << endl << NewCS.workshops << endl << NewCS.working_workshops << endl << NewCS.efficiency << endl;
+                fout << NewCS;
             }
+            }
+            else
+                cout << "Введены некорректные данные, сначала добавьте характеристики по компрессорным станциям" << endl;
+            break;
         }
         case 3:
         {
-            for (tube NewTube : GroupTube)
+            if (GroupTube.size() != 0 || GroupCS.size() != 0)
             {
-                fout << GroupTube.size() << endl;
-                fout << NewTube.length << endl << NewTube.diameter << endl << NewTube.status << endl;
+                for (tube NewTube : GroupTube)
+                {
+                    fout << GroupTube.size() << endl;
+                    fout << NewTube;
+                }
+                for (cs NewCS : GroupCS)
+                {
+                    fout << GroupCS.size() << endl;
+                    fout << NewCS;
+                }
             }
-            for (cs NewCS : GroupCS)
-            {
-                fout << GroupCS.size() << endl;
-                fout << NewCS.name << endl << NewCS.workshops << endl << NewCS.working_workshops << endl << NewCS.efficiency << endl;
-            }
+            else
+                cout << "Введены некорректные данные, сначала добавьте характеристики" << endl;
+            break;
         }
         }
         fout.close();
     }
+}
+
+ifstream& operator >> (ifstream& fin, tube& NewTube) 
+{
+    /*fin >> NewTube.id;*/
+    fin >> NewTube.length;
+    fin >> NewTube.diameter;
+    fin >> NewTube.status;
+    return fin;
+}
+
+ifstream& operator >> (ifstream& fin, cs& NewCS)
+{
+    /*fin >> NewCS.id;*/
+    fin >> NewCS.name;
+    fin >> NewCS.workshops;
+    fin >> NewCS.working_workshops;
+    fin >> NewCS.efficiency;
+    return fin;
 }
 
 void LoadAll(vector <tube>& GroupTube, vector <cs>& GroupCS)
@@ -144,22 +172,19 @@ void LoadAll(vector <tube>& GroupTube, vector <cs>& GroupCS)
         int NumberTube;
         int NumberCS;
         fin >> NumberTube;
+        GroupTube.reserve(NumberTube);
         while (NumberTube--)
         {  
             tube NewTube;
-            fin >> NewTube.length;
-            fin >> NewTube.diameter;
-            fin >> NewTube.status;
+            fin >> NewTube;
             GroupTube.push_back(NewTube);
         }
         fin >> NumberCS;
+        GroupCS.reserve(NumberCS);
         while (NumberCS--) 
         {
             cs NewCS;
-            fin >> NewCS.name;
-            fin >> NewCS.workshops;
-            fin >> NewCS.working_workshops;
-            fin >> NewCS.efficiency;
+            fin >> NewCS;
             GroupCS.push_back(NewCS);
         }
         fin.close();
@@ -168,7 +193,8 @@ void LoadAll(vector <tube>& GroupTube, vector <cs>& GroupCS)
 
 ostream& operator << (ostream& out, const tube& NewTube)
 {
-    out << "Длина трубы: " << NewTube.length << endl
+    out /*<< "ID: " << NewTube.id << endl*/
+        << "Длина трубы: " << NewTube.length << endl
         << "Диаметр трубы: " << NewTube.diameter << endl
         << "Статус трубы: " << NewTube.status << endl;
     return out;
@@ -176,7 +202,8 @@ ostream& operator << (ostream& out, const tube& NewTube)
 
 ostream& operator << (ostream& out, const cs& NewCS)
 {
-    out << "Название компрессорной станции: " << NewCS.name << endl
+    out /*<< "ID: " << NewCS.id << endl*/
+        << "Название компрессорной станции: " << NewCS.name << endl
         << "Количество всех цехов компрессорной станции: " << NewCS.workshops << endl
         << "Количество работающих цехов компрессорной станции: " << NewCS.working_workshops << endl
         << "Эффективность компрессорной станции: " << NewCS.efficiency << endl;
@@ -185,18 +212,18 @@ ostream& operator << (ostream& out, const cs& NewCS)
 
 tube& SelectTube(vector <tube>& GroupTube)
 {
-        int index;
-        cout << "Введите номер трубы: ";
-        do {
-            cin >> index;
-        } while (!CheckingValues(index, 1, (int)GroupTube.size()));
-        return GroupTube[index - 1];
+    int index;
+    cout << "Введите ID трубы: ";
+    do {
+        cin >> index;
+    } while (!CheckingValues(index, 1, (int)GroupTube.size()));
+    return GroupTube[index - 1];
 }
 
 cs& SelectCS(vector <cs>& GroupCS)
 {
     int index;
-    cout << "Введите номер компрессорной станции: ";
+    cout << "Введите ID компрессорной станции: ";
     do {
         cin >> index;
     } while (!CheckingValues(index, 1, (int)GroupCS.size()));
@@ -288,8 +315,8 @@ int main()
     setlocale(LC_ALL, "rus"); 
     vector <tube> GroupTube;
     vector <cs> GroupCS;
-    tube NewTube = {0,0,0};
-    cs NewCS = {"",0,0,0};
+    tube NewTube();
+    cs NewCS();
 
     while (true)
     {
@@ -324,16 +351,20 @@ int main()
             {
                 if (GroupTube.size() != 0)
                 {
-                    EditTube(SelectTube(GroupTube));
+                    SelectTube(GroupTube).EditTube();
                 }
+                else
+                    cout << "Введены некорректные данные, сначала добавьте характеристики трубы" << endl;
                 break;
             }
             case 5:
             {
                 if (GroupCS.size() != 0)
                 {
-                    EditCS(SelectCS(GroupCS));
+                    SelectCS(GroupCS).EditCS();
                 }
+                else
+                    cout << "Введены некорректные данные, сначала добавьте характеристики" << endl;
                 break;
             }
             case 6:
