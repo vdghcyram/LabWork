@@ -12,15 +12,16 @@ private:
     int working_workshops;
     int efficiency;
     int id;
+    
 
 public:
+    static int MaxID;
     cs() 
     {
         name = "";
         workshops = 0;
         working_workshops = 0;
         efficiency = 0; 
-        
     }
 
     void EditCS();

@@ -3,6 +3,7 @@
 #include <fstream>
 using namespace std;
 
+
 class tube
 {
 private:
@@ -10,14 +11,16 @@ private:
     double diameter;
     bool status;
     int id;
+    
 
 public:
+    static int MaxID;
     tube()
     {
         length = 0;
         diameter = 0;
         status = 0;
-       
+        id = MaxID++;
     }
 
     void EditTube();
@@ -26,4 +29,3 @@ public:
     friend ofstream& operator << (ofstream& fout, tube& NewTube);
     friend ostream& operator << (ostream& out, const tube& NewTube);
 };
-

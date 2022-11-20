@@ -16,71 +16,55 @@ void consol()
         << "5. Редактировать КС" << endl
         << "6. Сохранить" << endl
         << "7. Загрузить" << endl
+        << "8. Удалить трубу" << endl
+        << "9. Удалить КС" << endl
         << "0. Выход" << endl
         << "Введите номер пункта: ";
 }
 
 template <typename T>
-bool CheckingValues(const T& Variable, T beginning = numeric_limits<T>::min(), T end = numeric_limits<T>::max())
-{
-    if (cin.fail() || cin.peek() != '\n' || Variable<beginning || Variable>end)
+T CheckingValues(T beginning = numeric_limits<T>::min(), T end = numeric_limits<T>::max())
+{   
+    T variable;
+    cin >> variable;
+    while (cin.fail() || cin.peek() != '\n' || variable<beginning || variable>end)
     {
         cin.clear();
         cin.ignore(10000, '\n');
         cout << "Введите корректные данные от " << beginning << " до " << end << endl;
-        return false;
-    } return true;
+        cin >> variable;
+    } 
+    return variable;
 }
 
 void tube::EditTube()
 {
-        do
-        {
-        cout << "Введите обновленную длину трубы: " << endl;
-        cin >> length;
-        } while (!CheckingValues(length, 0.0001));
-        do 
-        {
-            cout << "Введите обновленный диаметр трубы: " << endl;
-            cin >> diameter;
-        } while (!CheckingValues(diameter, 0.0001));
-        char check = '0';
-        status = false;
-        do 
-        {
-            cout << "Введите обновленный статус трубы: 1 - рабочее; 0 - в ремонте: " << endl;
-            cin >> check;
-        } while (!CheckingValues(check, '0', '1'));
-        if (check == '1')
-        {
-            status = true;
-        }
-}
-
-void DeleteTube(vector<tube> GroupTube, tube& NewTube)
-{
-
+    cout << "Введите обновленный статус трубы: 1 - рабочее; 0 - в ремонте: " << endl;
+    status = CheckingValues(0, 1);
 }
 
 void cs::EditCS()
 {
-    {
-        cout << "Введите название компрессорной станции:" << endl;
-        cin >> ws;
-        getline(cin, name);
-    }
-    do {
-        cout << "Введите количество всех цехов компрессорной станции:" << endl;
-        cin >> workshops;
-    } while (!CheckingValues(workshops, 1));
-    do {
-        cout << "Введите количество работающих цехов компрессорной станции:" << endl;
-        cin >> working_workshops;
-    } while (!CheckingValues(working_workshops, 0, workshops));
-    do {
-        cout << "Введите эффективность компрессорной станции от 0 до 100:" << endl;
-        cin >> efficiency;
-    } while (!CheckingValues(efficiency, 0, 100));
+    cout << "Введите обновленное количество работающих цехов компрессорной станции:" << endl;
+    working_workshops = CheckingValues(0, workshops);
+}
+
+void DeleteCS(vector <cs>& GroupCS)
+{
+    int index;
+    cout << "Введите index компрессорной станции: ";
+    index = CheckingValues(0, cs::MaxID);
+    
+    GroupCS.erase(GroupCS.begin()+index);
+}
+
+void DeleteTube(vector <tube>& GroupTube)
+{
+    int index;
+    cout << "Введите index трубы: ";
+    index = CheckingValues(0, tube::MaxID);
+    
+    GroupTube.erase(GroupTube.begin()+index);
 }
 
 ofstream& operator << (ofstream& fout, tube& NewTube)
@@ -104,10 +88,8 @@ void SaveAll(const vector <tube>& GroupTube, const vector <cs>& GroupCS)
         cout << "1. Сохранить информацию по трубам" << endl
             << "2. Сохранить информацию по компрессорным станциям" << endl
             << "3. Сохранить информацию по всем объектам" << endl;
-        int i = 0;
-        do {
-            cin >> i;
-        } while (!CheckingValues(i, 1, 3));
+        
+        int i = CheckingValues(1, 3);
 
         switch (i)
         {
@@ -212,7 +194,7 @@ void LoadAll(vector <tube>& GroupTube, vector <cs>& GroupCS)
 
 ostream& operator << (ostream& out, const tube& NewTube)
 {
-    out /*<< "ID: " << NewTube.id << endl*/
+    out << "ID: " << NewTube.id << endl
         << "Длина трубы: " << NewTube.length << endl
         << "Диаметр трубы: " << NewTube.diameter << endl
         << "Статус трубы: " << NewTube.status << endl;
@@ -233,20 +215,18 @@ tube& SelectTube(vector <tube>& GroupTube)
 {
     int index;
     cout << "Введите ID трубы: ";
-    do {
-        cin >> index;
-    } while (!CheckingValues(index, 1, (int)GroupTube.size()));
-    return GroupTube[index - 1];
+    index = CheckingValues(0, (int)GroupTube.size() - 1);
+    
+    return GroupTube[index];
 }
 
 cs& SelectCS(vector <cs>& GroupCS)
 {
     int index;
     cout << "Введите ID компрессорной станции: ";
-    do {
-        cin >> index;
-    } while (!CheckingValues(index, 1, (int)GroupCS.size()));
-    return GroupCS[index - 1];
+    index = CheckingValues(0, (int)GroupCS.size() - 1);
+    
+    return GroupCS[index];
 }
 
 void OutPut (const vector <tube>& GroupTube, const vector <cs>& GroupCS)
@@ -254,10 +234,8 @@ void OutPut (const vector <tube>& GroupTube, const vector <cs>& GroupCS)
     cout << "1. Вывести информацию по трубам" << endl
         << "2. Вывести информацию по компрессорным станциям" << endl
         << "3. Вывести информацию по всем объектам" << endl;
-    int i = 0;
-    do {
-        cin >> i;
-    } while (!CheckingValues(i, 1, 3));
+    
+    int i = CheckingValues(1, 3);
 
     switch (i)
     {
@@ -266,47 +244,46 @@ void OutPut (const vector <tube>& GroupTube, const vector <cs>& GroupCS)
             for (tube NewTube : GroupTube)
             {
                 cout << NewTube << endl;
-            }return;
+            }
+            break;
         }
         case 2:
         {
             for (cs NewCS : GroupCS)
             {
                 cout << NewCS << endl;
-            }return;
+            }
+            break;
         }
         case 3:
         {
             for (tube NewTube : GroupTube)
             {
                 cout << NewTube << endl;
-            }return;
+            }
             for (cs NewCS : GroupCS)
             {
                 cout << NewCS << endl;
-            }return;
-        } }
+            }
+            break;
+        }
+    }
 }
 
 istream& operator >> (istream& in, tube& NewTube)
 {
-    do {
-        cout << "Введите длину трубы: " << endl;
-        cin >> NewTube.length;
-    } while (!CheckingValues(NewTube.length, 0.0001));
-    do {
-        cout << "Введите диаметр трубы: " << endl;
-        cin >> NewTube.diameter;
-    } while (!CheckingValues(NewTube.diameter, 0.0001));
-    char check = '0';
-    do {
-        cout << "Введите статус трубы: 1 - рабочее; 0 - в ремонте: " << endl;
-        cin >> check;
-    } while (!CheckingValues(check, '0', '1'));
-    if (check == '1')
-    {
-        NewTube.status = true;
-    }return in;
+    
+    cout << "Введите длину трубы: " << endl;
+    NewTube.length = CheckingValues(1, 100000);
+    
+    cout << "Введите диаметр трубы: " << endl;
+    NewTube.diameter = CheckingValues(1, 1500);
+    
+    cout << "Введитк статус трубы: "
+        << "0 - не работает "
+        << "1 - работает " << endl;
+    NewTube.status = CheckingValues(0, 1);
+    return in;
 }
 
 istream& operator >> (istream& in, cs& NewCS)
@@ -314,18 +291,16 @@ istream& operator >> (istream& in, cs& NewCS)
     cout << "Введите название компрессорной станции:" << endl;
     in >> ws;
     getline(cin, NewCS.name);
-    do {
-        cout << "Введите количество всех цехов компрессорной станции:" << endl;
-        cin >> NewCS.workshops;
-    } while (!CheckingValues(NewCS.workshops, 1));
-    do {
-        cout << "Введите количество работающих цехов компрессорной станции:" << endl;
-        cin >> NewCS.working_workshops;
-    } while (!CheckingValues(NewCS.working_workshops, 0, NewCS.workshops));
-    do {
-        cout << "Введите эффективность компрессорной станции от 0 до 100:" << endl;
-        cin >> NewCS.efficiency;
-    } while (!CheckingValues(NewCS.efficiency, 0, 100));
+
+    cout << "Введите количество всех цехов компрессорной станции:" << endl;
+    CheckingValues(1, 10000);
+   
+    cout << "Введите количество работающих цехов компрессорной станции:" << endl;
+    NewCS.working_workshops = CheckingValues(0, NewCS.workshops);
+    
+    cout << "Введите эффективность компрессорной станции от 0 до 100:" << endl;
+    NewCS.efficiency = CheckingValues(0, 100);
+   
     return in;
 }
 
@@ -340,11 +315,8 @@ int main()
     while (true)
     {
         consol();
-        int i = 0;
-        do {
-            cin >> i;
-        } while (!CheckingValues(i, 0,7));
-
+        int i = CheckingValues(0, 9);
+        
         switch (i)
         {
             case 1:
@@ -394,6 +366,27 @@ int main()
             case 7:
             {
                 LoadAll(GroupTube, GroupCS);
+                break;
+            }
+            case 8:
+            {
+
+                if (GroupTube.size() != 0)
+                {
+                    DeleteTube(GroupTube);
+                }
+                else
+                    cout << "Введены некорректные данные, сначала добавьте характеристики трубы" << endl;
+                break;
+            }
+            case 9:
+            {
+                if (GroupCS.size() != 0)
+                {
+                    DeleteCS(GroupCS);
+                }
+                else
+                    cout << "Введены некорректные данные, сначала добавьте характеристики компрессорной станции" << endl;
                 break;
             }
             case 0:
