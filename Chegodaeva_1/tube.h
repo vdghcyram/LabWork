@@ -1,4 +1,5 @@
 #pragma once
+#include "Checking.h"
 #include <iostream>
 #include <fstream>
 using namespace std;
@@ -23,7 +24,16 @@ public:
         status = 0;
         ++MaxID;
     }
+
     void EditTube();
+
+    string GetName() const;
+    bool GetStatus() const;
+
+    void SetStatus(bool status);
+    void InputStatusCheck();
+
+    static int GetID();
 
     template<typename T>
     friend void ChangingID(T Object);

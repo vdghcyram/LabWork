@@ -32,7 +32,6 @@ ofstream& operator << (ofstream& fout, const cs& NewCS)
     return fout;
 }
 
-
 ifstream& operator >> (ifstream& fin, tube& NewTube)
 {
     fin >> NewTube.name;
@@ -50,7 +49,6 @@ ifstream& operator >> (ifstream& fin, cs& NewCS)
     fin >> NewCS.efficiency;
     return fin;
 }
-
 
 istream& operator >> (istream& in, tube& NewTube)
 {

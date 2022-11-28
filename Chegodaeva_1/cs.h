@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include "Checking.h"
 using namespace std;
 
 class cs
@@ -25,6 +26,16 @@ public:
     }
 
     void EditCS();
+
+    string GetName() const;
+    int GetWorkshop() const;
+    int GetWorkingWorkshops() const;
+
+    static int GetID();
+
+    void EditingWorkshop();
+    bool StartWorkshop();
+    bool StopWorkshop();
 
     template<typename T>
     friend void ChangingID (T Object);
