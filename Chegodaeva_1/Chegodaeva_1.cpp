@@ -4,6 +4,8 @@
 #include <vector>
 #include "tube.h"
 #include "cs.h"
+#include <unordered_map>
+#include "OperatorOverloads.h"
 
 using namespace std;
 void consol()
@@ -12,31 +14,17 @@ void consol()
         << "1. Добавить трубу" << endl
         << "2. Добавить КС" << endl
         << "3. Просмотр всех объектов" << endl
-        << "4. Редактировать трубу" << endl
-        << "5. Редактировать КС" << endl
+        //<< "4. Редактировать трубу" << endl
+        //<< "5. Редактировать КС" << endl
         << "6. Сохранить" << endl
         << "7. Загрузить" << endl
-        << "8. Удалить трубу" << endl
-        << "9. Удалить КС" << endl
+        //<< "8. Удалить трубу" << endl
+        //<< "9. Удалить КС" << endl
         << "0. Выход" << endl
         << "Введите номер пункта: ";
 }
 
-template <typename T>
-T CheckingValues(T beginning = numeric_limits<T>::min(), T end = numeric_limits<T>::max())
-{   
-    T variable;
-    cin >> variable;
-    while (cin.fail() || cin.peek() != '\n' || variable<beginning || variable>end)
-    {
-        cin.clear();
-        cin.ignore(10000, '\n');
-        cout << "Введите корректные данные от " << beginning << " до " << end << endl;
-        cin >> variable;
-    } 
-    return variable;
-}
-
+/*
 void tube::EditTube()
 {
     cout << "Введите обновленный статус трубы: 1 - рабочее; 0 - в ремонте: " << endl;
@@ -49,187 +37,151 @@ void cs::EditCS()
     working_workshops = CheckingValues(0, workshops);
 }
 
-void DeleteCS(vector <cs>& GroupCS)
+
+void DeleteCS(unordered_map<int, cs>& GroupCS)
 {
     int index;
     cout << "Введите index компрессорной станции: ";
-    index = CheckingValues(0, cs::MaxID);
-    
-    GroupCS.erase(GroupCS.begin()+index);
+    index = CheckingValues(1, cs::MaxCSID);
+    GroupCS.erase(index);
 }
 
-void DeleteTube(vector <tube>& GroupTube)
+void DeleteTube(unordered_map<int, tube>& GroupTube)
 {
     int index;
     cout << "Введите index трубы: ";
-    index = CheckingValues(0, tube::MaxID);
+    index = CheckingValues(1, tube::MaxTubeID);
     
-    GroupTube.erase(GroupTube.begin()+index);
+    GroupTube.erase(index);
 }
+*/
 
-ofstream& operator << (ofstream& fout, tube& NewTube)
+
+string FileName()
 {
-    fout /*<< NewTube.id*/ /*<< endl*/ << NewTube.length << endl << NewTube.diameter << endl << NewTube.status << endl;
-    return fout;
+    cout << endl << "Введите имя файла: " << endl;
+    string way = "";
+    cin >> ws;
+    getline(cin, way);
+    way.insert(0, "./Saves/");
+    way.append(".txt");
+    return way;
 }
 
-ofstream& operator << (ofstream& fout, cs& NewCS)
-{
-    fout /*<< NewCS.id*/ /*<< endl*/ << NewCS.name << endl << NewCS.workshops << endl << NewCS.working_workshops << endl << NewCS.efficiency << endl;
-    return fout;
-}
-
-void SaveAll(const vector <tube>& GroupTube, const vector <cs>& GroupCS)
+void SaveAll(const unordered_map<int, tube>& GroupTube, const unordered_map<int, cs>& GroupCS)
 {
     ofstream fout;
-    fout.open("data.txt", ios::out);
+
+    string way = FileName();
+
+    fout.open(way, ios::out);
     if (fout.is_open())
     {
-        cout << "1. Сохранить информацию по трубам" << endl
-            << "2. Сохранить информацию по компрессорным станциям" << endl
-            << "3. Сохранить информацию по всем объектам" << endl;
-        
-        int i = CheckingValues(1, 3);
-
-        switch (i)
-        {
-        case 1:
-        {
-            if (GroupTube.size() != 0)
-            {
-                for (tube NewTube : GroupTube)
-                {
-                    fout << GroupTube.size() << endl;
-                    fout << NewTube;
-                }
-            }
-            else
-                cout << "Введены некорректные данные, сначала добавьте характеристики по трубам" << endl;
-            break;
-        }
-        case 2:
-        {
-            if (GroupCS.size() != 0)
-            {
-            for (cs NewCS : GroupCS)
-            {
-                fout << GroupCS.size() << endl;
-                fout << NewCS;
-            }
-            }
-            else
-                cout << "Введены некорректные данные, сначала добавьте характеристики по компрессорным станциям" << endl;
-            break;
-        }
-        case 3:
-        {
+            fout << GroupTube.size() << endl; 
+            fout << GroupCS.size() << endl;
             if (GroupTube.size() != 0 || GroupCS.size() != 0)
             {
-                for (tube NewTube : GroupTube)
+                for (auto& elem : GroupTube)
                 {
-                    fout << GroupTube.size() << endl;
-                    fout << NewTube;
+                    fout << elem.first << endl;
+                    fout <<  elem.second << endl;
                 }
-                for (cs NewCS : GroupCS)
+                for (auto& elem : GroupCS)
                 {
-                    fout << GroupCS.size() << endl;
-                    fout << NewCS;
+                    fout << elem.first << endl;
+                    fout << elem.second << endl;
                 }
             }
             else
                 cout << "Введены некорректные данные, сначала добавьте характеристики" << endl;
-            break;
-        }
-        }
-        fout.close();
     }
+    fout.close();
 }
 
-ifstream& operator >> (ifstream& fin, tube& NewTube) 
+template<typename T>
+void ChangingID(const unordered_map<int, T> Object)
 {
-    /*fin >> NewTube.id;*/
-    fin >> NewTube.length;
-    fin >> NewTube.diameter;
-    fin >> NewTube.status;
-    return fin;
+    int MaxId = 1;
+    for (const auto& elem : Object)
+    {
+        if (MaxId < elem.first)
+        {
+            MaxId = elem.first;
+        }
+    }
+    T::MaxID = MaxId;
 }
 
-ifstream& operator >> (ifstream& fin, cs& NewCS)
+void LoadAll( unordered_map<int, tube>& GroupTube,  unordered_map<int, cs>& GroupCS)
 {
-    /*fin >> NewCS.id;*/
-    fin >> NewCS.name;
-    fin >> NewCS.workshops;
-    fin >> NewCS.working_workshops;
-    fin >> NewCS.efficiency;
-    return fin;
-}
 
-void LoadAll(vector <tube>& GroupTube, vector <cs>& GroupCS)
-{
     ifstream fin;
-    fin.open("data.txt", ios::in);
+    string way = FileName();
+    fin.open(way, ios::in);
     if (fin.is_open())
     {
         int NumberTube;
         int NumberCS;
+        int id;
         fin >> NumberTube;
-        GroupTube.reserve(NumberTube);
-        while (NumberTube--)
+        fin >> NumberCS;
+        unordered_map<int, tube> GroupTube1;
+        unordered_map<int, cs> GroupCS1;
+
+        while (NumberTube>0)
         {  
             tube NewTube;
+            fin >> id;
             fin >> NewTube;
-            GroupTube.push_back(NewTube);
+            GroupTube1.emplace(id, NewTube);
+            --NumberTube;
         }
-        fin >> NumberCS;
-        GroupCS.reserve(NumberCS);
-        while (NumberCS--) 
+        while (NumberCS>0) 
         {
             cs NewCS;
+            fin >> id;
             fin >> NewCS;
-            GroupCS.push_back(NewCS);
+            GroupCS1.emplace(id, NewCS);
+            --NumberCS;
         }
+        GroupTube.swap(GroupTube1);
+        GroupCS.swap(GroupCS1);
+        ChangingID(GroupTube);
+        ChangingID(GroupCS);
         fin.close();
     }
 }
 
-ostream& operator << (ostream& out, const tube& NewTube)
-{
-    out << "ID: " << NewTube.id << endl
-        << "Длина трубы: " << NewTube.length << endl
-        << "Диаметр трубы: " << NewTube.diameter << endl
-        << "Статус трубы: " << NewTube.status << endl;
-    return out;
-}
-
-ostream& operator << (ostream& out, const cs& NewCS)
-{
-    out /*<< "ID: " << NewCS.id << endl*/
-        << "Название компрессорной станции: " << NewCS.name << endl
-        << "Количество всех цехов компрессорной станции: " << NewCS.workshops << endl
-        << "Количество работающих цехов компрессорной станции: " << NewCS.working_workshops << endl
-        << "Эффективность компрессорной станции: " << NewCS.efficiency << endl;
-    return out;
-}
-
-tube& SelectTube(vector <tube>& GroupTube)
+tube& SelectTube(unordered_map<int, tube>& GroupTube)
 {
     int index;
     cout << "Введите ID трубы: ";
-    index = CheckingValues(0, (int)GroupTube.size() - 1);
+    index = CheckingValues(1, (int)GroupTube.size());
     
     return GroupTube[index];
 }
 
-cs& SelectCS(vector <cs>& GroupCS)
+cs& SelectCS(unordered_map<int, cs>& GroupCS)
 {
     int index;
     cout << "Введите ID компрессорной станции: ";
-    index = CheckingValues(0, (int)GroupCS.size() - 1);
+    index = CheckingValues(1, (int)GroupCS.size());
     
     return GroupCS[index];
 }
 
-void OutPut (const vector <tube>& GroupTube, const vector <cs>& GroupCS)
+template<typename T>
+void PrintObj(const unordered_map<int, T>& Obj)
+{
+        for (const auto& elem : Obj)
+            {
+                cout << "ID объекта: " << elem.first << endl;
+                cout << elem.second << endl;
+                cout << endl;
+            }
+}
+
+void OutPut (const unordered_map<int, tube>& GroupTube,const unordered_map<int, cs>& GroupCS)
 {
     cout << "1. Вывести информацию по трубам" << endl
         << "2. Вывести информацию по компрессорным станциям" << endl
@@ -241,67 +193,23 @@ void OutPut (const vector <tube>& GroupTube, const vector <cs>& GroupCS)
     {
         case 1:
         {
-            for (tube NewTube : GroupTube)
-            {
-                cout << NewTube << endl;
-            }
+            PrintObj(GroupTube);
             break;
         }
         case 2:
         {
-            for (cs NewCS : GroupCS)
-            {
-                cout << NewCS << endl;
-            }
+            PrintObj(GroupCS);
             break;
         }
         case 3:
         {
-            for (tube NewTube : GroupTube)
-            {
-                cout << NewTube << endl;
-            }
-            for (cs NewCS : GroupCS)
-            {
-                cout << NewCS << endl;
-            }
+            cout <<"Трубы: "<< endl;
+            PrintObj(GroupTube);
+            cout <<"Компрессорные станции: "<< endl;
+            PrintObj(GroupCS);
             break;
         }
     }
-}
-
-istream& operator >> (istream& in, tube& NewTube)
-{
-    
-    cout << "Введите длину трубы: " << endl;
-    NewTube.length = CheckingValues(1, 100000);
-    
-    cout << "Введите диаметр трубы: " << endl;
-    NewTube.diameter = CheckingValues(1, 1500);
-    
-    cout << "Введитк статус трубы: "
-        << "0 - не работает "
-        << "1 - работает " << endl;
-    NewTube.status = CheckingValues(0, 1);
-    return in;
-}
-
-istream& operator >> (istream& in, cs& NewCS)
-{
-    cout << "Введите название компрессорной станции:" << endl;
-    in >> ws;
-    getline(cin, NewCS.name);
-
-    cout << "Введите количество всех цехов компрессорной станции:" << endl;
-    CheckingValues(1, 10000);
-   
-    cout << "Введите количество работающих цехов компрессорной станции:" << endl;
-    NewCS.working_workshops = CheckingValues(0, NewCS.workshops);
-    
-    cout << "Введите эффективность компрессорной станции от 0 до 100:" << endl;
-    NewCS.efficiency = CheckingValues(0, 100);
-   
-    return in;
 }
 
 int main()
@@ -309,20 +217,21 @@ int main()
     setlocale(LC_ALL, "rus"); 
     vector <tube> GroupTube;
     vector <cs> GroupCS;
-    tube NewTube();
-    cs NewCS();
+    unordered_map<int, tube> GroupTube1;
+    unordered_map<int, cs> GroupCS1;
 
     while (true)
     {
         consol();
         int i = CheckingValues(0, 9);
-        
+
         switch (i)
         {
             case 1:
             {
                 tube NewTube;
                 cin >> NewTube;
+                GroupTube1.emplace(NewTube.MaxID, NewTube);
                 GroupTube.push_back(NewTube);
                 break;
             }
@@ -330,19 +239,21 @@ int main()
             {
                 cs NewCS;
                 cin >> NewCS;
+                GroupCS1.emplace(NewCS.MaxID, NewCS);
                 GroupCS.push_back(NewCS);
                 break;
             }
             case 3:
             {
-                OutPut(GroupTube, GroupCS);
+                OutPut(GroupTube1, GroupCS1);
                 break;
             }
+            /*
             case 4:
             {
-                if (GroupTube.size() != 0)
+                if (GroupTube1.size() != 0)
                 {
-                    SelectTube(GroupTube).EditTube();
+                    SelectTube(GroupTube1).EditTube();
                 }
                 else
                     cout << "Введены некорректные данные, сначала добавьте характеристики трубы" << endl;
@@ -350,30 +261,32 @@ int main()
             }
             case 5:
             {
-                if (GroupCS.size() != 0)
+                if (GroupCS1.size() != 0)
                 {
-                    SelectCS(GroupCS).EditCS();
+                    SelectCS(GroupCS1).EditCS();
                 }
                 else
                     cout << "Введены некорректные данные, сначала добавьте характеристики" << endl;
                 break;
             }
+            */
             case 6:
             {
-                SaveAll(GroupTube, GroupCS);
+                SaveAll(GroupTube1, GroupCS1);
                 break;
             }
             case 7:
             {
-                LoadAll(GroupTube, GroupCS);
+                LoadAll(GroupTube1, GroupCS1);
                 break;
             }
+            /*
             case 8:
             {
 
-                if (GroupTube.size() != 0)
+                if (GroupTube1.size() != 0)
                 {
-                    DeleteTube(GroupTube);
+                    DeleteTube(GroupTube1);
                 }
                 else
                     cout << "Введены некорректные данные, сначала добавьте характеристики трубы" << endl;
@@ -381,14 +294,15 @@ int main()
             }
             case 9:
             {
-                if (GroupCS.size() != 0)
+                if (GroupCS1.size() != 0)
                 {
-                    DeleteCS(GroupCS);
+                    DeleteCS(GroupCS1);
                 }
                 else
                     cout << "Введены некорректные данные, сначала добавьте характеристики компрессорной станции" << endl;
                 break;
             }
+            */
             case 0:
             {
                 return 0;

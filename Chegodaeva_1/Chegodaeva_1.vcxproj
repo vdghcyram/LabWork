@@ -129,10 +129,12 @@
   <ItemGroup>
     <ClCompile Include="Chegodaeva_1.cpp" />
     <ClCompile Include="cs.cpp" />
+    <ClCompile Include="OperatorOverloads.cpp" />
     <ClCompile Include="tube.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cs.h" />
+    <ClInclude Include="OperatorOverloads.h" />
     <ClInclude Include="tube.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
