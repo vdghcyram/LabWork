@@ -62,16 +62,28 @@ void OutPut (const unordered_map<int, tube>& GroupTube, unordered_map<int, cs>& 
     {
         case 1:
         {
+            if (!CheckingAvailability(GroupTube))
+            {
+                return;
+            }
             PrintObj(GroupTube);
             break;
         }
         case 2:
         {
+            if (!CheckingAvailability(GroupCS))
+            {
+                return;
+            }
             PrintObj(GroupCS);
             break;
         }
         case 3:
         {
+            if (!CheckingAvailability(GroupTube) || (!CheckingAvailability(GroupCS)))
+            {
+                return;
+            }
             cout << "Трубы: " << endl;
             PrintObj(GroupTube);
             cout << "Компрессорные станции: " << endl;
@@ -83,9 +95,8 @@ void OutPut (const unordered_map<int, tube>& GroupTube, unordered_map<int, cs>& 
             string Name = "NoName";
             unordered_map<int, int> IDs;
 
-            if (GroupCS.size() == 0)
+            if (!CheckingAvailability(GroupCS))
             {
-                cout << "Необходимо сначала создать хотя бы один элемент!";
                 return;
             }
 
@@ -101,9 +112,8 @@ void OutPut (const unordered_map<int, tube>& GroupTube, unordered_map<int, cs>& 
             double Effectiveness = 0;
             unordered_map<int, int> IDs;
 
-            if (GroupCS.size() == 0)
+            if (!CheckingAvailability(GroupCS))
             {
-                cout << "Необходимо сначала создать хотя бы один элемент!";
                 return;
             }
 

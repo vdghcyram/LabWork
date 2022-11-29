@@ -27,7 +27,6 @@ bool CheckByName(const T& Obj, string param)
     return  (Obj.GetName().find(param) != string::npos);
 }
 
-
 template<typename T>
 bool CheckByEffectiveness(const T& Cs, double param)
 {
@@ -43,7 +42,6 @@ bool CheckByStatus(const T& P, bool param)
     return(P.GetStatus() == param);
 }
 
-
 template<typename T>
 bool CheckingAvailabilityID(int ID, const unordered_map<int, T>& Obj)
 {
@@ -53,4 +51,14 @@ bool CheckingAvailabilityID(int ID, const unordered_map<int, T>& Obj)
         return false;
     }
     return true;
+}
+
+template<typename T>
+bool CheckingAvailability(const unordered_map<int, T>& GroupObj)
+{
+    if (GroupObj.size() == 0)
+    {
+        cout << "Необходимо сначала создать хотя бы один элемент!\n";
+        return true;
+    }
 }
