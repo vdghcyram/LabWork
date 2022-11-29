@@ -265,11 +265,10 @@ void ChangingObjects(unordered_map<int, tube>& GroupP, unordered_map<int, cs>& G
 	switch (item)
 	{
 	case 1:
-		if (GroupP.size() == 0)
-            {
-                cout << "Необходимо сначала создать хотя бы один элемент!";
-                return;
-            }
+        if (!CheckingAvailability(GroupP))
+        {
+            return;
+        }
 
 		cout << endl;
 		Name = EnteringFragmentName();
@@ -278,9 +277,8 @@ void ChangingObjects(unordered_map<int, tube>& GroupP, unordered_map<int, cs>& G
 		return;
 
 	case 2:
-        if (GroupP.size() == 0)
+        if (!CheckingAvailability(GroupP))
         {
-            cout << "Необходимо сначала создать хотя бы один элемент!";
             return;
         }
 
@@ -292,9 +290,8 @@ void ChangingObjects(unordered_map<int, tube>& GroupP, unordered_map<int, cs>& G
        
 		return;
 	case 3:
-        if (GroupP.size() == 0)
+        if (!CheckingAvailability(GroupP))
         {
-            cout << "Необходимо сначала создать хотя бы один элемент!";
             return;
         }
 
@@ -302,9 +299,8 @@ void ChangingObjects(unordered_map<int, tube>& GroupP, unordered_map<int, cs>& G
 		SelectingAnEditAction(GroupP, IDsObj, Element_By_ElementEditingPipe);
 		return;
 	case 4:
-        if (GroupCs.size() == 0)
+        if (!CheckingAvailability(GroupCs))
         {
-            cout << "Необходимо сначала создать хотя бы один элемент!";
             return;
         }
 
